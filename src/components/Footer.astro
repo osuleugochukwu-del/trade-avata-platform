@@ -1,0 +1,12 @@
+---
+const base = import.meta.env.BASE_URL;
+---
+<footer class="site-footer">
+  <div class="container footer-grid">
+    <div><a class="brand footer-brand" href={base}><img src={`${base}brand/trade-avata-mark.png`} alt="Trade Avata" /><span><strong>Trade Avata</strong><small>Trade Simple.</small></span></a><p>Trading technology, products, tools and education designed to make trading simpler.</p></div>
+    <div><h3>Explore</h3><a href={`${base}products/`}>Products</a><a href={`${base}tools/`}>Tools</a><a href={`${base}learn/`}>Learn</a></div>
+    <div><h3>Company</h3><a href={`${base}company/`}>About</a><a href={`${base}contact/`}>Contact</a><a href={`${base}faq/`}>FAQ</a></div>
+    <div><h3>Legal</h3><a href={`${base}terms/`}>Terms</a><a href={`${base}privacy/`}>Privacy</a><a href={`${base}risk-disclosure/`}>Risk disclosure</a></div>
+  </div>
+  <div class="container footer-bottom"><span>© {new Date().getFullYear()} Trade Avata.</span><span>Built with a blue-first product identity.</span></div>
+</footer>

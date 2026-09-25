@@ -1,0 +1,8 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import { products } from '../../data/site.js';
+export function getStaticPaths(){ return products.filter(p=>p.visible).map(p=>({params:{slug:p.slug},props:{product:p}})); }
+const { product } = Astro.props;
+const base = import.meta.env.BASE_URL;
+---
+<BaseLayout title={`${product.name} — Trade Avata`}><section class="page-hero"><div class="container"><span class="eyebrow">Product</span><p><a href={`${base}products/`}>Products</a> / {product.name}</p></div></section><section class="section"><div class="container detail-grid"><div class="detail-visual"><img src={`${base}images/hero-laptop.png`} alt={`${product.name} preview`} /></div><div class="detail-panel"><div class="product-meta"><span class="pill">{product.type}</span>{product.platforms.map(x=><span class="pill">{x}</span>)}</div><h1>{product.name}</h1><p class="lead">{product.description}</p><div class="actions">{product.showPrice && <strong>{product.priceLabel}</strong>}<a class="button" href={`${base}contact/`}>{product.availability === 'Available' ? 'Get started' : 'Ask about this product'}</a></div><h3>Key features</h3><ul class="checklist">{product.features.map(f=><li>{f}</li>)}</ul><p class="meta">Availability: {product.availability}</p></div></div></section></BaseLayout>

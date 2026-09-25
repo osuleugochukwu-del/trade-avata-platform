@@ -1,0 +1,5 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import { faqs } from '../data/site.js';
+---
+<BaseLayout title="FAQ — Trade Avata"><section class="page-hero"><div class="container"><span class="eyebrow">FAQ</span><h1>Frequently asked questions.</h1><p>Common answers about Trade Avata, products, access and the platform.</p></div></section><section class="section"><div class="container legal"><div class="faq-list">{faqs.map(([q,a])=><details class="faq"><summary>{q}</summary><p>{a}</p></details>)}</div></div></section></BaseLayout>

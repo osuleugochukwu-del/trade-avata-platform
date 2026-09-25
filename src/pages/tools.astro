@@ -1,0 +1,5 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import { tools } from '../data/site.js';
+---
+<BaseLayout title="Tools — Trade Avata"><section class="page-hero"><div class="container"><span class="eyebrow">Tools</span><h1>Practical trading utilities.</h1><p>Compact tools for risk, position sizing and trade planning. Each tool can later become a richer backend-managed application.</p></div></section><section class="section"><div class="container"><div class="tool-grid">{tools.map(t=><article class="card"><div class="tool-icon">TA</div><h3>{t.name}</h3><p>{t.description}</p><span class="meta">Tool interface arrives in the next phase.</span></article>)}</div></div></section></BaseLayout>
