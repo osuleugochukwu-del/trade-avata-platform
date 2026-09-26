@@ -244,6 +244,7 @@ main {
 }
 
 .header-actions {
+  margin-left: auto;
   display: flex;
   align-items: center;
   gap: 8px;
@@ -830,7 +831,8 @@ main {
 .site-footer {
   border-top: 1px solid var(--border);
   padding: 46px 0 20px;
-  background: #030811;
+  background: var(--surface);
+  color: var(--text);
 }
 
 .footer-grid {
@@ -869,7 +871,7 @@ main {
   padding-top: 18px;
   display: flex;
   justify-content: space-between;
-  color: #74849a;
+  color: var(--muted);
   font-size: 12px;
 }
 
