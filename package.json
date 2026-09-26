@@ -7,7 +7,7 @@
     "dev": "astro dev",
     "build": "astro build",
     "preview": "astro preview",
-    "verify": "node scripts/verify-prototype.mjs"
+    "verify": "node scripts/verify-prototype.mjs && node scripts/verify-layer2-complete.mjs && node scripts/verify-layer2-final.mjs && node scripts/verify-tools.mjs"
   },
   "dependencies": {
     "astro": "latest"

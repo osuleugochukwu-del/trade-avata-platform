@@ -2,15 +2,9 @@
 import '../styles/global.css';
 import Header from '../components/Header.astro';
 import Footer from '../components/Footer.astro';
-
-const {
-  title = 'Trade Avata',
-  description = 'Trade Avata — Trade Simple.'
-} = Astro.props;
-
+const { title = 'Trade Avata', description = 'Trade Avata — Trade Simple.' } = Astro.props;
 const base = import.meta.env.BASE_URL;
 ---
-
 <!doctype html>
 <html lang="en">
   <head>
@@ -18,140 +12,28 @@ const base = import.meta.env.BASE_URL;
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="description" content={description} />
     <title>{title}</title>
-    <link
-      rel="icon"
-      type="image/png"
-      href={`${base}brand/trade-avata-mark.png`}
-    />
+    <link rel="icon" type="image/png" href={`${base}brand/trade-avata-mark.png`} />
   </head>
-
   <body>
     <Header />
-
-    <main>
-      <slot />
-    </main>
-
+    <main><slot /></main>
     <Footer />
-
-    <!-- Site-wide Jump to Top -->
-    <button
-      class="jump-to-top"
-      type="button"
-      data-jump-to-top
-      aria-label="Jump to top"
-      title="Jump to top"
-    >
-      <span aria-hidden="true">↑</span>
-    </button>
-
     <script is:inline>
       const root = document.documentElement;
-
-      /* =========================
-         THEME
-      ========================= */
-
-      const storedTheme =
-        localStorage.getItem('trade-avata-theme');
-
-      if (storedTheme === 'light' || storedTheme === 'dark') {
-        root.dataset.theme = storedTheme;
-      }
-
-      const themeButton =
-        document.querySelector('[data-theme-toggle]');
-
+      const stored = localStorage.getItem('trade-avata-theme');
+      if (stored) root.dataset.theme = stored;
+      const themeButton = document.querySelector('[data-theme-toggle]');
       themeButton?.addEventListener('click', () => {
-        const nextTheme =
-          root.dataset.theme === 'light'
-            ? 'dark'
-            : 'light';
-
-        root.dataset.theme = nextTheme;
-
-        localStorage.setItem(
-          'trade-avata-theme',
-          nextTheme
-        );
+        const next = root.dataset.theme === 'light' ? 'dark' : 'light';
+        root.dataset.theme = next;
+        localStorage.setItem('trade-avata-theme', next);
       });
-
-      /* =========================
-         JUMP TO TOP
-      ========================= */
-
-      const jumpToTop =
-        document.querySelector('[data-jump-to-top]');
-
-      const updateJumpToTop = () => {
-        if (!jumpToTop) return;
-
-        /*
-          Show after approximately three
-          screenfuls of scrolling.
-        */
-        const scrollThreshold =
-          window.innerHeight * 3;
-
-        const shouldShow =
-          window.scrollY >= scrollThreshold;
-
-        jumpToTop.classList.toggle(
-          'is-visible',
-          shouldShow
-        );
-
-        jumpToTop.setAttribute(
-          'aria-hidden',
-          String(!shouldShow)
-        );
-      };
-
-      window.addEventListener(
-        'scroll',
-        updateJumpToTop,
-        { passive: true }
-      );
-
-      window.addEventListener(
-        'resize',
-        updateJumpToTop
-      );
-
-      updateJumpToTop();
-
-      jumpToTop?.addEventListener(
-        'click',
-        () => {
-          window.scrollTo({
-            top: 0,
-            behavior: 'smooth'
-          });
-        }
-      );
-
-      /* =========================
-         MOBILE MENU
-      ========================= */
-
-      const menuButton =
-        document.querySelector('[data-menu-toggle]');
-
-      const menu =
-        document.querySelector('[data-mobile-menu]');
-
-      menuButton?.addEventListener(
-        'click',
-        () => {
-          const open =
-            menu?.classList.toggle('is-open');
-
-          menuButton.setAttribute(
-            'aria-expanded',
-            String(Boolean(open))
-          );
-        }
-      );
+      const menuButton = document.querySelector('[data-menu-toggle]');
+      const menu = document.querySelector('[data-mobile-menu]');
+      menuButton?.addEventListener('click', () => {
+        const open = menu?.classList.toggle('is-open');
+        menuButton.setAttribute('aria-expanded', String(Boolean(open)));
+      });
     </script>
   </body>
 </html>

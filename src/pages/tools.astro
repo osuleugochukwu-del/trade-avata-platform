@@ -1,5 +1,94 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
-import { tools } from '../data/site.js';
+import { toolCategories, tools } from '../data/site.js';
+const base = import.meta.env.BASE_URL;
+const popular = tools.filter(tool => tool.popular);
 ---
-<BaseLayout title="Tools — Trade Avata"><section class="page-hero"><div class="container"><span class="eyebrow">Tools</span><h1>Practical trading utilities.</h1><p>Compact tools for risk, position sizing and trade planning. Each tool can later become a richer backend-managed application.</p></div></section><section class="section"><div class="container"><div class="tool-grid">{tools.map(t=><article class="card"><div class="tool-icon">TA</div><h3>{t.name}</h3><p>{t.description}</p><span class="meta">Tool interface arrives in the next phase.</span></article>)}</div></div></section></BaseLayout>
+<BaseLayout title="Trading Tools — Trade Avata" description="A focused library of trading calculators, market tools, timing utilities and trade-planning tools.">
+  <section class="page-hero tools-hero"><div class="container">
+    <span class="eyebrow">Trade Avata Tools</span>
+    <h1>Useful tools.<br /><span>Zero clutter.</span></h1>
+    <p>Calculators for planning. Live market widgets for context. Simple utilities for timing and trade preparation.</p>
+    <div class="tool-center-actions"><a class="button" href="#tool-library">Browse tools</a><a class="button button-outline" href="#popular-tools">Popular tools</a></div>
+  </div></section>
+
+  <section class="section compact-section"><div class="container">
+    <div class="tools-search card">
+      <div><span class="eyebrow">Tool Center</span><h2>Find a tool quickly.</h2><p>Search by name or use the categories below. Favorites and recently used tools stay on this device for now.</p></div>
+      <label class="tool-search-field"><span class="sr-only">Search tools</span><input data-tool-search type="search" placeholder="Search tools…" autocomplete="off" /><kbd>/</kbd></label>
+    </div>
+  </div></section>
+
+  <section class="section compact-section" data-personal-tools hidden><div class="container">
+    <div class="section-head"><div><span class="eyebrow">Your tools</span><h2>Saved & recently used</h2><p>Your browser remembers these locally. Later, account sync can move this into your Trade Avata profile.</p></div></div>
+    <div class="quick-tool-grid" data-personal-tool-list></div>
+  </div></section>
+
+  <section class="section compact-section" id="popular-tools"><div class="container">
+    <div class="section-head"><div><span class="eyebrow">Quick access</span><h2>Popular tools</h2></div><a href="#tool-library">See all tools →</a></div>
+    <div class="quick-tool-grid">
+      {popular.map(tool => <a class="quick-tool card" href={`${base}tools/${tool.slug}/`} data-tool-link data-tool-name={`${tool.name} ${tool.description}`} data-tool-category={tool.category}><span class="tool-icon">TA</span><span><strong>{tool.name}</strong><small>{tool.description}</small></span><span aria-hidden="true">↗</span></a>)}
+    </div>
+  </div></section>
+
+  <section class="section" id="tool-library"><div class="container">
+    <div class="section-head"><div><span class="eyebrow">Library</span><h2>Tools by category</h2><p>Each tool has its own clean URL, so you can bookmark it or go directly to it later.</p></div></div>
+    <div class="tool-category-grid">
+      {toolCategories.map(category => (
+        <section class="tool-category card" data-category-block>
+          <div class="category-heading"><div><span class="category-kicker">{category.name}</span><h3>{category.name}</h3><p>{category.description}</p></div><span class="category-count">{category.tools.length}</span></div>
+          <div class="category-tools">
+            {category.tools.map(slug => {
+              const tool = tools.find(item => item.slug === slug);
+              return tool ? <a class="tool-row" href={`${base}tools/${tool.slug}/`} data-tool-link data-tool-name={`${tool.name} ${tool.description}`} data-tool-category={tool.category}>
+                <span class="tool-row-icon">{tool.category === 'Market' ? '↗' : tool.category === 'Timing' ? '◷' : tool.category === 'Plan & Track' ? '✓' : '∑'}</span>
+                <span class="tool-row-copy"><strong>{tool.name}</strong><small>{tool.description}</small></span>
+                <span class="tool-row-arrow">→</span>
+              </a> : null;
+            })}
+          </div>
+        </section>
+      ))}
+    </div>
+    <p class="tool-empty" data-tool-empty hidden>No tool matched that search. Try a simpler name or browse a category.</p>
+  </div></section>
+
+  <script is:inline>
+    const search = document.querySelector('[data-tool-search]');
+    const links = [...document.querySelectorAll('[data-tool-link]')];
+    const blocks = [...document.querySelectorAll('[data-category-block]')];
+    const empty = document.querySelector('[data-tool-empty]');
+    const key = 'trade-avata-tool-history';
+    const runSearch = () => {
+      const q = (search?.value || '').trim().toLowerCase();
+      let visible = 0;
+      links.forEach(link => {
+        const matches = !q || link.dataset.toolName.toLowerCase().includes(q) || link.dataset.toolCategory.toLowerCase().includes(q);
+        link.hidden = !matches;
+        if (matches) visible += 1;
+      });
+      blocks.forEach(block => { block.hidden = !block.querySelector('[data-tool-link]:not([hidden])'); });
+      if (empty) empty.hidden = visible !== 0;
+    };
+    search?.addEventListener('input', runSearch);
+    document.addEventListener('keydown', event => {
+      if (event.key === '/' && document.activeElement?.tagName !== 'INPUT' && document.activeElement?.tagName !== 'TEXTAREA') { event.preventDefault(); search?.focus(); }
+    });
+    const personal = document.querySelector('[data-personal-tools]');
+    const personalList = document.querySelector('[data-personal-tool-list]');
+    const toolRecords = new Map(links.map(link => [link.href, link]));
+    const renderPersonal = () => {
+      let history = [];
+      try { history = JSON.parse(localStorage.getItem(key) || '[]'); } catch {}
+      const favorites = [...toolRecords.keys()].filter(href => { try { return localStorage.getItem(`trade-avata-fav-${href.split('/tools/')[1]?.replace(/\/$/, '')}`) === '1'; } catch { return false; } });
+      const ordered = [...favorites, ...history].filter((href, i, arr) => href && arr.indexOf(href) === i).slice(0, 8);
+      if (!ordered.length) { if (personal) personal.hidden = true; return; }
+      if (personal) personal.hidden = false;
+      if (personalList) personalList.innerHTML = ordered.map(href => { const link=toolRecords.get(href); if(!link)return ''; return `<a class="quick-tool card" href="${href}"><span class="tool-icon">TA</span><span><strong>${link.querySelector('strong')?.textContent || 'Tool'}</strong><small>${link.querySelector('small')?.textContent || ''}</small></span><span aria-hidden="true">↗</span></a>`; }).join('');
+    };
+    links.forEach(link => link.addEventListener('click', () => {
+      try { const history = JSON.parse(localStorage.getItem(key) || '[]').filter(href => href !== link.href); history.unshift(link.href); localStorage.setItem(key, JSON.stringify(history.slice(0, 8))); } catch {}
+    }));
+    renderPersonal();
+  </script>
+</BaseLayout>

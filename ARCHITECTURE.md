@@ -1,47 +1,91 @@
-# Trade Avata Platform Architecture — Prototype 1
+# Trade Avata Platform Architecture — Prototype 2
 
-## Purpose
-This repository is a clean replacement for the earlier prototype. The earlier `Tradeavata` repository remains untouched and is treated as historical reference.
+## Direction
+Trade Avata is a lightweight trading-technology company platform, not a large file warehouse.
 
-## Prototype 1 scope
-Prototype 1 is intentionally limited to the public foundation:
-- shared header/navigation
-- responsive mobile navigation
-- dark-first blue brand system
-- light mode preference
-- homepage
-- products catalogue
-- product detail
-- tools
-- learn public preview
-- company
-- FAQ
-- contact/support
-- login/register route placeholders
-- legal routes
-- 404 route
-- GitHub Pages deployment workflow
+The public site should remain fast while specialist services deliver large or platform-specific assets.
 
-## Dynamic model already planned
-Products have separate concepts for:
-- `visible`
-- `showPrice`
-- `availability`
-- `featured`
+## Layer 2 scope
+- Stronger public product catalogue
+- Product categories and compact filters
+- Explicit product delivery model
+- External-delivery-ready product detail pages
+- Public course preview/detail routes with Vimeo-ready delivery metadata
+- Full public Tools Center with direct routes, favorites/recent history and focused tool pages
+- Functional local calculators plus established-provider market widgets
+- Clear separation between public catalogue and future account/access controls
+- Performance-first public pages
+- No deployment is required to advance this layer; deployment is a later validation phase after Layers 1–5 are built.
 
-This lets the production backend hide a product without deleting it and hide a price without hiding the product.
+## External delivery model
+Use the most appropriate delivery channel for each product:
+- Video courses: Vimeo
+- cTrader products: cTrader Store
+- MT4/MT5 products: MQL5 Market where appropriate
+- Large software installers: external/private download storage
+- Lightweight web tools: run in the Trade Avata site when practical
 
-## Deferred until Prototype 1 is tested
-- Firebase authentication
-- Firestore
-- Storage
-- admin CRUD
-- payments
-- course progression
-- comments/chat
+The website stores catalogue metadata, customer experience, access rules and links. It should not bundle large videos, installers or specialist marketplace assets into the public site unless there is a specific reason.
+
+## Future application/backend layers
+Firebase is intended primarily for:
+- users and profiles
+- authentication
+- roles and permissions
+- purchases/orders
+- entitlements
+- course enrollment and progress
+- subscriptions
 - notifications
-- translations
-- market data
+- site settings
+- admin data
+- audit/security records
 
-## Rule
-No backend feature is added merely because it can be added. Each phase must pass a build, route, responsive and functional inspection before the next phase begins.
+Firebase Storage or another file service should only hold files that genuinely need protected storage. Do not automatically put every large asset there.
+
+## Access model
+Registration is not the same as paid membership.
+
+A user may be:
+1. Visitor
+2. Registered user
+3. Customer
+4. Product owner / course student
+5. Subscriber, where a subscription product exists
+6. Admin or staff
+
+Access is entitlement-based. Owning one course or product does not grant every other product.
+
+## Performance rules
+1. Public pages should not load private dashboard/admin code unnecessarily.
+2. Avoid large media in the website bundle.
+3. Avoid unnecessary third-party scripts.
+4. Prefer local calculations for lightweight tools.
+5. Keep client-side JavaScript small and scoped to the page that needs it.
+6. Add backend calls only where dynamic data is genuinely required.
+
+## Verification gate
+Before moving to the next layer:
+- static verification passes
+- JavaScript syntax passes
+- asset references pass
+- production build passes in CI
+- all routes load
+- product filters work
+- calculator works on mobile and desktop
+- no large files are accidentally bundled
+- GitHub Pages deployment succeeds
+- deployed site is inspected on mobile and desktop
+
+## Tools Center architecture
+
+The public Tools experience is intentionally structured as a navigation system rather than one oversized dashboard.
+
+- `/tools/` is the Tools Center with search, categories, quick access, saved tools and recently used tools.
+- `/tools/[slug]/` provides a clean direct URL for every tool.
+- Desktop uses a hover/focus mega-menu under Tools.
+- Mobile uses expandable Tools and category sections.
+- Simple calculators run locally in the browser with no backend dependency.
+- Market-data tools use established third-party widgets where practical instead of Trade Avata becoming a market-data warehouse.
+- Favorites and recent-tool history are browser-local in this layer; Firebase can synchronize them after the accounts layer is introduced.
+- External widgets should be lazy-loaded or isolated to their individual tool pages so the Tools Center stays lightweight.

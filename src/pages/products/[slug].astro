@@ -4,5 +4,22 @@ import { products } from '../../data/site.js';
 export function getStaticPaths(){ return products.filter(p=>p.visible).map(p=>({params:{slug:p.slug},props:{product:p}})); }
 const { product } = Astro.props;
 const base = import.meta.env.BASE_URL;
+const deliveryUrl = product.delivery?.url?.startsWith('/') ? `${base}${product.delivery.url.replace(/^\//, '')}` : product.delivery?.url;
 ---
-<BaseLayout title={`${product.name} — Trade Avata`}><section class="page-hero"><div class="container"><span class="eyebrow">Product</span><p><a href={`${base}products/`}>Products</a> / {product.name}</p></div></section><section class="section"><div class="container detail-grid"><div class="detail-visual"><img src={`${base}images/hero-laptop.png`} alt={`${product.name} preview`} /></div><div class="detail-panel"><div class="product-meta"><span class="pill">{product.type}</span>{product.platforms.map(x=><span class="pill">{x}</span>)}</div><h1>{product.name}</h1><p class="lead">{product.description}</p><div class="actions">{product.showPrice && <strong>{product.priceLabel}</strong>}<a class="button" href={`${base}contact/`}>{product.availability === 'Available' ? 'Get started' : 'Ask about this product'}</a></div><h3>Key features</h3><ul class="checklist">{product.features.map(f=><li>{f}</li>)}</ul><p class="meta">Availability: {product.availability}</p></div></div></section></BaseLayout>
+<BaseLayout title={`${product.name} — Trade Avata`}>
+  <section class="page-hero"><div class="container"><span class="eyebrow">Product</span><p><a href={`${base}products/`}>Products</a> / {product.name}</p></div></section>
+  <section class="section"><div class="container detail-grid">
+    <div class="detail-visual"><img src={`${base}${product.image}`} alt={`${product.name} preview`} /></div>
+    <div class="detail-panel">
+      <div class="product-meta"><span class="pill">{product.type}</span>{product.platforms.map(x=><span class="pill">{x}</span>)}</div>
+      <h1>{product.name}</h1>
+      <p class="lead">{product.description}</p>
+      <div class="actions">{product.showPrice && <strong>{product.priceLabel}</strong>}{product.delivery?.url ? <a class="button" href={deliveryUrl} target={product.delivery.type === 'Web tool' ? undefined : '_blank'} rel={product.delivery.type === 'Web tool' ? undefined : 'noreferrer'}>{product.availability === 'Available' ? 'Open product' : 'View delivery'}</a> : <a class="button" href={`${base}contact/`}>{product.availability === 'Available' ? 'Get started' : 'Ask about this product'}</a>}</div>
+      <div class="delivery-card"><span class="eyebrow">Delivery</span><strong>{product.delivery?.type || 'Trade Avata platform'}</strong><p>{product.delivery?.label || 'Delivery method will be configured for this product.'}</p></div>
+      <h3>Key features</h3>
+      <ul class="checklist">{product.features.map(f=><li>{f}</li>)}</ul>
+      <p class="meta">Availability: {product.availability}</p>
+    </div>
+  </div></section>
+  <section class="section compact-section"><div class="container info-strip"><div><span class="eyebrow">Lightweight by design</span><h2>Trade Avata does not need to host every large file.</h2><p>Video, specialist marketplace products and large software installers can live on the platform best suited to deliver them. Trade Avata keeps the catalogue, access rules and customer experience connected.</p></div><a class="button button-outline" href={`${base}faq/`}>Learn more</a></div></section>
+</BaseLayout>

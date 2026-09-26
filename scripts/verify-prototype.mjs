@@ -8,8 +8,8 @@ const required = [
   'src/layouts/BaseLayout.astro', 'src/components/Header.astro', 'src/components/Footer.astro',
   'src/styles/global.css', 'src/data/site.js',
   'src/pages/index.astro', 'src/pages/products/index.astro', 'src/pages/products/[slug].astro',
-  'src/pages/tools.astro', 'src/pages/company.astro', 'src/pages/faq.astro', 'src/pages/contact.astro',
-  'src/pages/login.astro', 'src/pages/register.astro', 'src/pages/learn/index.astro',
+  'src/pages/tools.astro', 'src/pages/tools/[slug].astro', 'src/pages/company.astro', 'src/pages/faq.astro', 'src/pages/contact.astro',
+  'src/pages/login.astro', 'src/pages/register.astro', 'src/pages/learn/index.astro', 'src/pages/learn/[slug].astro',
   'src/pages/terms.astro', 'src/pages/privacy.astro', 'src/pages/risk-disclosure.astro', 'src/pages/404.astro'
 ];
 const errors=[];
@@ -43,11 +43,24 @@ for(const file of sourceFiles){
   for(const m of text.matchAll(hrefRegex)){
     const target='/'+m[1].replace(/^\//,'').replace(/\/$/,'')+'/';
     const normalized=target.replace(/\/+/g,'/');
-    const dynamic=normalized.includes('[slug]');
+    const dynamic=normalized.includes('[slug]') || normalized.includes('${');
     const asset=normalized.startsWith('/brand/') || normalized.startsWith('/images/');
     if(!dynamic && !asset && !routes.has(normalized) && !normalized.startsWith('/products/')) errors.push(`Potential broken internal route ${normalized} in ${path.relative(root,file)}`);
   }
 }
+
+
+const siteData=fs.readFileSync(path.join(root,'src/data/site.js'),'utf8');
+if(!siteData.includes("delivery: { type: 'Vimeo'")) errors.push('Course delivery model is missing Vimeo metadata');
+if(!siteData.includes("delivery: { type: 'cTrader Store'")) errors.push('cTrader Store delivery model is missing');
+if(!siteData.includes("delivery: { type: 'External download'")) errors.push('External download delivery model is missing');
+const toolPage=fs.readFileSync(path.join(root,'src/pages/tools/[slug].astro'),'utf8');
+if(!toolPage.includes("kind === 'position-sizing'")) errors.push('Position sizing tool is missing');
+if(!toolPage.includes("kind === 'risk-reward'")) errors.push('Risk/reward tool is missing');
+if(!toolPage.includes("kind === 'technical-analysis'")) errors.push('Technical analysis widget is missing');
+if(!siteData.includes('toolCategories')) errors.push('Tool category structure is missing');
+const cssText=fs.readFileSync(path.join(root,'src/styles/global.css'),'utf8');
+if((cssText.match(/Trade Avata readability and prototype utility states/g)||[]).length!==1) errors.push('Duplicate readability utility block detected in CSS');
 
 const pkg=JSON.parse(fs.readFileSync(path.join(root,'package.json'),'utf8'));
 if(pkg.dependencies?.['@astrojs/firebase']) errors.push('Unexpected @astrojs/firebase dependency');

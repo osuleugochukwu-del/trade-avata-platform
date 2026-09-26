@@ -1,138 +1,68 @@
 ---
+import { toolCategories, tools } from '../data/site.js';
 const base = import.meta.env.BASE_URL;
-
-const tools = [
-  { name: 'Position Size', slug: 'position-size' },
-  { name: 'Risk / Reward', slug: 'risk-reward' },
-  { name: 'Pip Value', slug: 'pip-value' },
-  { name: 'Margin', slug: 'margin' },
-  { name: 'P&L', slug: 'pnl' },
-  { name: 'Lot Size', slug: 'lot-size' },
-];
+const popularTools = tools.filter(tool => tool.popular);
 ---
-
 <header class="site-header">
   <div class="container header-inner">
     <a class="brand" href={base} aria-label="Trade Avata home">
       <img src={`${base}brand/trade-avata-mark.png`} alt="Trade Avata" />
-      <span>
-        <strong>Trade Avata</strong>
-        <small>Trade Simple.</small>
-      </span>
+      <span><strong>Trade Avata</strong><small>Trade Simple.</small></span>
     </a>
-
     <nav class="desktop-nav" aria-label="Primary navigation">
       <a href={`${base}products/`}>Products</a>
-
-      <div class="nav-tools">
-        <button
-          class="nav-tools-button"
-          type="button"
-          aria-expanded="false"
-          aria-controls="tools-dropdown"
-        >
-          Tools <span aria-hidden="true">⌄</span>
-        </button>
-
-        <div class="tools-dropdown" id="tools-dropdown">
-          <div class="tools-dropdown-header">
-            <strong>Trading Tools</strong>
-            <span>Quick access</span>
+      <div class="nav-dropdown" data-tools-dropdown>
+        <a class="nav-tools-link" href={`${base}tools/`} aria-haspopup="true">Tools <span aria-hidden="true">⌄</span></a>
+        <div class="mega-menu" role="menu">
+          <div class="mega-intro">
+            <span class="eyebrow">Tools</span>
+            <strong>Everything useful, without the clutter.</strong>
+            <a href={`${base}tools/`}>Open Tools Center →</a>
           </div>
-
-          <div class="tools-dropdown-list">
-            {tools.map((tool) => (
-              <a href={`${base}tools/#${tool.slug}`}>
-                {tool.name}
-              </a>
+          <div class="mega-categories">
+            {toolCategories.map(category => (
+              <div class="mega-category">
+                <div class="mega-category-title"><span>{category.name}</span><small>{category.tools.length}</small></div>
+                <div class="mega-links">
+                  {category.tools.slice(0, 6).map(slug => {
+                    const tool = tools.find(item => item.slug === slug);
+                    return tool ? <a role="menuitem" href={`${base}tools/${tool.slug}/`}>{tool.name}</a> : null;
+                  })}
+                </div>
+              </div>
             ))}
           </div>
-
-          <a class="tools-all-link" href={`${base}tools/`}>
-            Open Tools Center →
-          </a>
         </div>
       </div>
-
       <a href={`${base}company/`}>Company</a>
       <a href={`${base}learn/`}>Learn</a>
       <a href={`${base}faq/`}>FAQ</a>
     </nav>
-
     <div class="header-actions">
-      <button
-        class="icon-button"
-        type="button"
-        data-theme-toggle
-        aria-label="Toggle theme"
-      >
-        ◐
-      </button>
-
-      <a
-        class="button button-small button-outline header-login"
-        href={`${base}login/`}
-      >
-        Log in
-      </a>
-
-      <button
-        class="icon-button menu-button"
-        type="button"
-        data-menu-toggle
-        aria-label="Open menu"
-        aria-expanded="false"
-      >
-        ☰
-      </button>
+      <button class="icon-button" type="button" data-theme-toggle aria-label="Toggle theme">◐</button>
+      <a class="button button-small button-outline header-login" href={`${base}login/`}>Log in</a>
+      <button class="icon-button menu-button" type="button" data-menu-toggle aria-label="Open menu" aria-expanded="false">☰</button>
     </div>
   </div>
-
   <nav class="mobile-menu" data-mobile-menu aria-label="Mobile navigation">
     <a href={base}>Home</a>
     <a href={`${base}products/`}>Products</a>
-
     <details class="mobile-tools">
-      <summary>Tools</summary>
-
-      <div class="mobile-tools-list">
-        {tools.map((tool) => (
-          <a href={`${base}tools/#${tool.slug}`}>
-            {tool.name}
-          </a>
+      <summary>Tools <span>⌄</span></summary>
+      <div class="mobile-tool-groups">
+        {toolCategories.map(category => (
+          <details>
+            <summary>{category.name} <small>{category.tools.length}</small></summary>
+            <div class="mobile-tool-links">
+              {category.tools.map(slug => {
+                const tool = tools.find(item => item.slug === slug);
+                return tool ? <a href={`${base}tools/${tool.slug}/`}>{tool.name}</a> : null;
+              })}
+            </div>
+          </details>
         ))}
-
-        <a href={`${base}tools/`}>Open Tools Center →</a>
       </div>
     </details>
-
-    <a href={`${base}company/`}>Company</a>
-    <a href={`${base}learn/`}>Learn</a>
-    <a href={`${base}faq/`}>FAQ</a>
-    <a href={`${base}contact/`}>Support</a>
-    <a href={`${base}login/`}>Log in</a>
+    <a href={`${base}company/`}>Company</a><a href={`${base}learn/`}>Learn</a><a href={`${base}faq/`}>FAQ</a><a href={`${base}contact/`}>Support</a><a href={`${base}login/`}>Log in</a>
   </nav>
 </header>
-
-<script>
-  const toolsButton = document.querySelector('.nav-tools-button');
-  const toolsDropdown = document.querySelector('.tools-dropdown');
-
-  if (toolsButton && toolsDropdown) {
-    toolsButton.addEventListener('click', () => {
-      const isOpen = toolsButton.getAttribute('aria-expanded') === 'true';
-      toolsButton.setAttribute('aria-expanded', String(!isOpen));
-      toolsDropdown.classList.toggle('is-open', !isOpen);
-    });
-
-    document.addEventListener('click', (event) => {
-      if (
-        !toolsButton.contains(event.target) &&
-        !toolsDropdown.contains(event.target)
-      ) {
-        toolsButton.setAttribute('aria-expanded', 'false');
-        toolsDropdown.classList.remove('is-open');
-      }
-    });
-  }
-</script>
