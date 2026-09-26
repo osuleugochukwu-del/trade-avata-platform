@@ -457,7 +457,7 @@ main {
 .stats {
   display: grid;
   grid-template-columns: repeat(4, 1fr);
-  margin: 22px 0 50px;
+  margin: 22px auto 50px;
   border: 1px solid var(--border);
   border-radius: 18px;
   background: var(--surface);
