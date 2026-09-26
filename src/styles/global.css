@@ -593,7 +593,7 @@ main {
 }
 
 .feature-banner {
-  margin: 10px 0 58px;
+  margin: 10px auto 58px;
   padding: 34px;
   border-radius: 22px;
   border: 1px solid rgba(8, 120, 255, 0.35);
