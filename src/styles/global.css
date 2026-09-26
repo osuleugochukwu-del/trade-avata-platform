@@ -128,8 +128,11 @@ main {
 .brand small {
   display: block;
   color: var(--muted);
-  font-size: 11px;
-  margin-top: 3px;
+  font-size: 13px;
+  line-height: 1.25;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  margin-top: 4px;
 }
 
 .desktop-nav {
@@ -741,6 +744,19 @@ main {
     repeat(6, minmax(0, 1fr));
 }
 
+.product-catalogue-grid[data-columns="5"] .product-card,
+.product-catalogue-grid[data-columns="6"] .product-card {
+  padding: 14px;
+}
+
+.product-catalogue-grid[data-columns="6"] .product-card h3 {
+  font-size: 16px;
+}
+
+.product-catalogue-grid[data-columns="6"] .product-card p {
+  font-size: 13px;
+}
+
 .feature-banner {
   margin: 10px auto 58px;
   padding: 34px;
@@ -1174,10 +1190,6 @@ main {
     flex-shrink: 0;
   }
 
-  /*
-    At tablet width, keep 1–4 useful
-    and hide the denser 5–6 options.
-  */
   .grid-density-button[data-grid-columns="5"],
   .grid-density-button[data-grid-columns="6"] {
     display: none;
@@ -1283,8 +1295,6 @@ main {
     font-size: 38px;
   }
 
-  /* Catalogue toolbar */
-
   .catalogue-toolbar {
     display: flex;
     flex-direction: column;
@@ -1317,20 +1327,11 @@ main {
     min-width: 40px;
   }
 
-  /*
-    Phone supports only 1, 2 and 3.
-  */
-
   .grid-density-button[data-grid-columns="4"],
   .grid-density-button[data-grid-columns="5"],
   .grid-density-button[data-grid-columns="6"] {
     display: none;
   }
-
-  /*
-    Product grid on phone:
-    1, 2 or 3 columns only.
-  */
 
   .product-catalogue-grid[data-columns="1"] {
     grid-template-columns:
