@@ -10,10 +10,13 @@ const base = import.meta.env.BASE_URL;
   <section class="page-hero">
     <div class="container">
       <span class="eyebrow">Products</span>
+
       <h1>Products for smarter trading.</h1>
+
       <p>
-        Browse indicators, applications, tools and resources. The production
-        catalogue will be controlled from the Trade Avata backend.
+        Browse indicators, applications, tools and resources.
+        The production catalogue will be controlled from the
+        Trade Avata backend.
       </p>
     </div>
   </section>
@@ -21,6 +24,7 @@ const base = import.meta.env.BASE_URL;
   <section class="section">
     <div class="container">
 
+      <!-- FILTERS -->
       <div class="filter-bar">
         <input
           aria-label="Search products"
@@ -51,20 +55,25 @@ const base = import.meta.env.BASE_URL;
         </select>
       </div>
 
+      <!-- CATALOGUE TOOLBAR -->
       <div class="catalogue-toolbar">
-        <div class="section-head">
-          <div>
-            <strong data-product-count>
-              {publicProducts.length} public products
-            </strong>
-            <p>
-              Hidden products stay in the backend and do not appear here.
-            </p>
-          </div>
+
+        <div class="catalogue-summary">
+          <strong data-product-count>
+            {publicProducts.length} public products
+          </strong>
+
+          <span>
+            Hidden products stay in the backend and do not
+            appear here.
+          </span>
         </div>
 
-        <div class="grid-density" aria-label="Products per row">
-          <span class="grid-density-label">View</span>
+        <div class="grid-density">
+          <div class="grid-density-copy">
+            <strong>View</strong>
+            <span>Products per row</span>
+          </div>
 
           <div
             class="grid-density-controls"
@@ -76,6 +85,7 @@ const base = import.meta.env.BASE_URL;
               class="grid-density-button"
               data-grid-columns="1"
               aria-label="1 product per row"
+              aria-pressed="false"
             >
               1
             </button>
@@ -85,6 +95,7 @@ const base = import.meta.env.BASE_URL;
               class="grid-density-button"
               data-grid-columns="2"
               aria-label="2 products per row"
+              aria-pressed="false"
             >
               2
             </button>
@@ -94,6 +105,7 @@ const base = import.meta.env.BASE_URL;
               class="grid-density-button"
               data-grid-columns="3"
               aria-label="3 products per row"
+              aria-pressed="false"
             >
               3
             </button>
@@ -103,6 +115,7 @@ const base = import.meta.env.BASE_URL;
               class="grid-density-button"
               data-grid-columns="4"
               aria-label="4 products per row"
+              aria-pressed="false"
             >
               4
             </button>
@@ -112,6 +125,7 @@ const base = import.meta.env.BASE_URL;
               class="grid-density-button"
               data-grid-columns="5"
               aria-label="5 products per row"
+              aria-pressed="false"
             >
               5
             </button>
@@ -121,6 +135,7 @@ const base = import.meta.env.BASE_URL;
               class="grid-density-button"
               data-grid-columns="6"
               aria-label="6 products per row"
+              aria-pressed="false"
             >
               6
             </button>
@@ -128,8 +143,9 @@ const base = import.meta.env.BASE_URL;
         </div>
       </div>
 
+      <!-- PRODUCT GRID -->
       <div
-        class="grid-3 product-catalogue-grid"
+        class="product-catalogue-grid"
         data-product-grid
         data-columns="4"
       >
@@ -139,7 +155,9 @@ const base = import.meta.env.BASE_URL;
               class="card product-card"
               data-product-card
               data-name={p.name.toLowerCase()}
-              data-platforms={p.platforms.join("|").toLowerCase()}
+              data-platforms={p.platforms
+                .join("|")
+                .toLowerCase()}
               data-price={
                 p.showPrice
                   ? (p.price > 0 ? "paid" : "free")
@@ -157,10 +175,14 @@ const base = import.meta.env.BASE_URL;
               </div>
 
               <div class="product-meta">
-                <span class="pill">{p.type}</span>
+                <span class="pill">
+                  {p.type}
+                </span>
 
                 {p.platforms.slice(0, 2).map(x => (
-                  <span class="pill">{x}</span>
+                  <span class="pill">
+                    {x}
+                  </span>
                 ))}
               </div>
 
@@ -168,11 +190,15 @@ const base = import.meta.env.BASE_URL;
 
               <p>{p.short}</p>
 
-              {p.showPrice ? (
-                <strong>{p.priceLabel}</strong>
-              ) : (
-                <span class="meta">Price hidden</span>
-              )}
+              {
+                p.showPrice ? (
+                  <strong>{p.priceLabel}</strong>
+                ) : (
+                  <span class="meta">
+                    Price hidden
+                  </span>
+                )
+              }
 
               <a
                 class="button button-small"
@@ -189,68 +215,93 @@ const base = import.meta.env.BASE_URL;
   </section>
 
   <script is:inline>
-    const grid = document.querySelector('[data-product-grid]');
-    const cards = [...document.querySelectorAll('[data-product-card]')];
+    const grid =
+      document.querySelector('[data-product-grid]');
 
-    const search = document.querySelector(
-      '[aria-label="Search products"]'
-    );
+    const cards = [
+      ...document.querySelectorAll(
+        '[data-product-card]'
+      )
+    ];
 
-    const platform = document.querySelector(
-      '[aria-label="Platform"]'
-    );
+    const search =
+      document.querySelector(
+        '[aria-label="Search products"]'
+      );
 
-    const price = document.querySelector(
-      '[aria-label="Price"]'
-    );
+    const platform =
+      document.querySelector(
+        '[aria-label="Platform"]'
+      );
 
-    const availability = document.querySelector(
-      '[aria-label="Availability"]'
-    );
+    const price =
+      document.querySelector(
+        '[aria-label="Price"]'
+      );
 
-    const count = document.querySelector(
-      '[data-product-count]'
-    );
+    const availability =
+      document.querySelector(
+        '[aria-label="Availability"]'
+      );
+
+    const count =
+      document.querySelector(
+        '[data-product-count]'
+      );
 
     const densityButtons = [
-      ...document.querySelectorAll('[data-grid-columns]')
+      ...document.querySelectorAll(
+        '[data-grid-columns]'
+      )
     ];
 
     const normalize = value =>
-      value.toLowerCase().replace(/\s+/g, '-');
+      value
+        .toLowerCase()
+        .replace(/\s+/g, '-');
 
-    /*
-      Catalogue density
-      -----------------
-      Desktop:
-      1–6 columns, default 4.
-
-      Mobile:
-      1–3 columns, default 2.
-
-      The mobile maximum is enforced by CSS.
-    */
+    /* =========================
+       GRID DENSITY
+    ========================= */
 
     const applyGridDensity = columns => {
       if (!grid) return;
 
-      const requestedColumns = Number(columns);
+      const requested =
+        Number(columns);
 
-      if (!Number.isFinite(requestedColumns)) return;
+      if (!Number.isFinite(requested)) {
+        return;
+      }
 
-      const safeColumns = Math.min(
-        6,
-        Math.max(1, Math.round(requestedColumns))
-      );
+      const isMobile =
+        window.matchMedia(
+          '(max-width: 600px)'
+        ).matches;
 
-      grid.dataset.columns = String(safeColumns);
+      const maximum =
+        isMobile ? 3 : 6;
 
-      densityButtons.forEach(button => {
-        const buttonColumns = Number(
-          button.dataset.gridColumns
+      const safeColumns =
+        Math.min(
+          maximum,
+          Math.max(
+            1,
+            Math.round(requested)
+          )
         );
 
-        const active = buttonColumns === safeColumns;
+      grid.dataset.columns =
+        String(safeColumns);
+
+      densityButtons.forEach(button => {
+        const buttonColumns =
+          Number(
+            button.dataset.gridColumns
+          );
+
+        const active =
+          buttonColumns === safeColumns;
 
         button.classList.toggle(
           'is-active',
@@ -265,38 +316,80 @@ const base = import.meta.env.BASE_URL;
     };
 
     /*
-      Start with four columns on desktop.
-      The CSS media query will present two columns
-      on phones until the visitor chooses another view.
+      Desktop default: 4
+      Phone default: 2
     */
-    applyGridDensity(4);
+
+    const setDefaultGridDensity = () => {
+      const isMobile =
+        window.matchMedia(
+          '(max-width: 600px)'
+        ).matches;
+
+      applyGridDensity(
+        isMobile ? 2 : 4
+      );
+    };
+
+    setDefaultGridDensity();
 
     densityButtons.forEach(button => {
-      button.addEventListener('click', () => {
-        const columns = Number(
-          button.dataset.gridColumns
-        );
+      button.addEventListener(
+        'click',
+        () => {
+          const columns =
+            Number(
+              button.dataset.gridColumns
+            );
 
-        applyGridDensity(columns);
-      });
+          applyGridDensity(columns);
+        }
+      );
     });
 
+    window.addEventListener(
+      'resize',
+      () => {
+        const isMobile =
+          window.matchMedia(
+            '(max-width: 600px)'
+          ).matches;
+
+        const current =
+          Number(
+            grid?.dataset.columns || 4
+          );
+
+        if (isMobile && current > 3) {
+          applyGridDensity(3);
+        }
+      }
+    );
+
+    /* =========================
+       PRODUCT FILTERS
+    ========================= */
+
     const filter = () => {
-      const query = (search?.value || '')
-        .trim()
-        .toLowerCase();
+      const query =
+        (search?.value || '')
+          .trim()
+          .toLowerCase();
 
       const platformValue =
-        (platform?.value || 'All platforms')
+        (platform?.value ||
+          'All platforms')
           .toLowerCase();
 
       const priceValue =
-        (price?.value || 'All prices')
+        (price?.value ||
+          'All prices')
           .toLowerCase();
 
       const availabilityValue =
         normalize(
-          availability?.value || 'All availability'
+          availability?.value ||
+            'All availability'
         );
 
       let visible = 0;
@@ -304,19 +397,26 @@ const base = import.meta.env.BASE_URL;
       cards.forEach(card => {
         const matchesQuery =
           !query ||
-          card.dataset.name.includes(query);
+          card.dataset.name
+            .includes(query);
 
         const matchesPlatform =
-          platformValue === 'all platforms' ||
+          platformValue ===
+            'all platforms' ||
           card.dataset.platforms
             .split('|')
-            .includes(platformValue);
+            .includes(
+              platformValue
+            );
 
         const matchesPrice =
-          priceValue === 'all prices' ||
+          priceValue ===
+            'all prices' ||
           (
-            normalize(priceValue) === 'hidden-price'
-              ? card.dataset.price === 'hidden'
+            normalize(priceValue) ===
+              'hidden-price'
+              ? card.dataset.price ===
+                'hidden'
               : card.dataset.price ===
                 normalize(priceValue)
           );
@@ -343,7 +443,9 @@ const base = import.meta.env.BASE_URL;
       if (count) {
         count.textContent =
           `${visible} public product${
-            visible === 1 ? '' : 's'
+            visible === 1
+              ? ''
+              : 's'
           }`;
       }
     };
