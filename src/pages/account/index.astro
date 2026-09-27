@@ -1,0 +1,92 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+---
+<BaseLayout title="My Account — Trade Avata" description="Manage your Trade Avata account, access and progress.">
+  <section class="page-hero"><div class="container"><span class="eyebrow">Account</span><h1>My Trade Avata.</h1><p id="account-intro">Loading your account…</p></div></section>
+  <section class="section"><div class="container">
+    <div class="account-layout">
+      <aside class="card account-nav">
+        <div class="account-avatar" id="account-avatar">TA</div>
+        <strong id="account-name">Loading…</strong>
+        <span class="meta" id="account-email"></span>
+        <span class="pill" id="account-role">User</span>
+        <a class="button button-small" href="./settings/">Account settings</a>
+        <button class="button button-small button-outline" id="logout" type="button">Log out</button>
+      </aside>
+      <div class="account-main">
+        <div class="account-stat-grid" id="account-stats"></div>
+        <div class="card account-panel"><div class="section-head compact"><div><span class="eyebrow">Access</span><h2>Your products</h2></div></div><div id="entitlements" class="account-list"><p class="meta">Loading…</p></div></div>
+        <div class="card account-panel"><div class="section-head compact"><div><span class="eyebrow">Learning</span><h2>Your courses</h2></div></div><div id="enrollments" class="account-list"><p class="meta">Loading…</p></div></div>
+        <div class="card account-panel"><div class="section-head compact"><div><span class="eyebrow">Activity</span><h2>Recent orders</h2></div></div><div id="orders" class="account-list"><p class="meta">Loading…</p></div></div>
+        <p class="form-status" id="account-status" aria-live="polite"></p>
+      </div>
+    </div>
+  </div></section>
+</BaseLayout>
+<script>
+  import { bindAccountPage, signOutCurrentUser } from '../../lib/firebase/account.js';
+
+  const intro = document.querySelector('#account-intro');
+  const avatar = document.querySelector('#account-avatar');
+  const name = document.querySelector('#account-name');
+  const email = document.querySelector('#account-email');
+  const role = document.querySelector('#account-role');
+  const stats = document.querySelector('#account-stats');
+  const entitlements = document.querySelector('#entitlements');
+  const enrollments = document.querySelector('#enrollments');
+  const orders = document.querySelector('#orders');
+  const status = document.querySelector('#account-status');
+  const logout = document.querySelector('#logout');
+
+  const escapeHtml = value => String(value ?? '').replace(/[&<>'"]/g, char => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', "'": '&#39;', '"': '&quot;' })[char]);
+  const initials = value => value?.trim()?.split(/\s+/).slice(0, 2).map(part => part[0]).join('').toUpperCase() || 'TA';
+  const empty = (label, action) => `<p class="meta">${escapeHtml(label)}${action ? ` <a class="text-link" href="${action.href}">${escapeHtml(action.label)} →</a>` : ''}</p>`;
+
+  function renderList(target, items, titleKey, metaKey) {
+    if (!items.length) {
+      target.innerHTML = empty('Nothing here yet.');
+      return;
+    }
+    target.innerHTML = items.slice(0, 8).map(item => `<div class="account-list-item"><strong>${escapeHtml(item[titleKey] || item.productName || item.courseName || item.id)}</strong><span>${escapeHtml(item[metaKey] || item.status || 'Active')}</span></div>`).join('');
+  }
+
+  bindAccountPage({
+    onSignedOut() {
+      window.location.href = '../login/';
+    },
+    onLoaded(data) {
+      const displayName = data.user.displayName || 'Trade Avata User';
+      intro.textContent = `Signed in as ${displayName}. Your access is controlled by your account entitlements.`;
+      avatar.textContent = initials(displayName);
+      name.textContent = displayName;
+      email.textContent = data.user.email || '';
+      role.textContent = data.role?.role || 'user';
+      stats.innerHTML = [
+        ['Products', data.entitlements.length],
+        ['Courses', data.enrollments.length],
+        ['Orders', data.orders.length],
+        ['Progress items', data.progress.length]
+      ].map(([label, value]) => `<div class="card account-stat"><strong>${value}</strong><span>${escapeHtml(label)}</span></div>`).join('');
+      renderList(entitlements, data.entitlements, 'productName', 'status');
+      renderList(enrollments, data.enrollments, 'courseName', 'status');
+      renderList(orders, data.orders, 'orderNumber', 'status');
+    },
+    onError(error) {
+      status.textContent = error?.message || 'We could not load your account data. Please refresh and try again.';
+      status.dataset.error = 'true';
+    }
+  });
+
+  logout?.addEventListener('click', async () => {
+    logout.disabled = true;
+    status.textContent = 'Signing you out…';
+    try {
+      await signOutCurrentUser();
+      window.location.href = '../login/';
+    } catch (error) {
+      logout.disabled = false;
+      status.textContent = error?.message || 'Could not sign out. Please try again.';
+      status.dataset.error = 'true';
+    }
+  });
+</script>

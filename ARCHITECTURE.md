@@ -89,3 +89,28 @@ The public Tools experience is intentionally structured as a navigation system r
 - Market-data tools use established third-party widgets where practical instead of Trade Avata becoming a market-data warehouse.
 - Favorites and recent-tool history are browser-local in this layer; Firebase can synchronize them after the accounts layer is introduced.
 - External widgets should be lazy-loaded or isolated to their individual tool pages so the Tools Center stays lightweight.
+
+## Layer 3 — Accounts + Backend
+
+Layer 3 adds the Firebase-backed account and data foundation without putting credentials or privileged operations in browser code.
+
+### Included
+
+- Firebase Web SDK integration with environment-based public configuration
+- Email/password registration and login
+- Google sign-in
+- Password reset
+- Authenticated account dashboard
+- Profile settings
+- User roles with admin/staff read model
+- Firestore collections for products, courses, modules, lessons, enrollments, progress, entitlements, orders, subscriptions, announcements, notifications, certificates, articles, support tickets, audit logs, site settings and feature flags
+- Firestore security rules with owner/admin boundaries
+- Firestore indexes for account queries
+- Storage rules prepared for protected user/admin assets
+- Graceful configuration error when Firebase environment variables are absent
+
+### Security boundary
+
+The browser may contain the Firebase web configuration, but it must never contain service-account credentials or trusted payment/entitlement logic. Payment verification and entitlement issuance remain trusted-backend responsibilities.
+
+Layer 3 does not attempt to finish the Layer 4 course engine or Layer 5 admin console. It establishes the authenticated data foundation those layers will use.

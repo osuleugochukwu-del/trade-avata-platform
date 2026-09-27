@@ -51,3 +51,21 @@
 - [ ] Technical-analysis, forex-table, market-data and economic-calendar widgets load only on their individual pages.
 - [ ] Tool favorites and recent history remain local and do not block first render.
 - [ ] Tool pages remain readable at mobile widths.
+
+## Layer 3 checks
+
+- [ ] Firebase web configuration is supplied through deployment environment variables.
+- [ ] Email/password registration creates a user and profile document.
+- [ ] Email/password login reaches `/account/`.
+- [ ] Google sign-in works in the configured Firebase project.
+- [ ] Password reset sends a reset email.
+- [ ] Signed-out visitors are redirected from account pages.
+- [ ] Account profile reads only the authenticated user's private data.
+- [ ] Role display defaults safely to `user` when no role document exists.
+- [ ] Admin/staff role records are not writable from the browser.
+- [ ] Orders/entitlements/subscriptions/enrollments/progress are not client-writable.
+- [ ] Firestore rules deploy without errors.
+- [ ] Firestore indexes deploy without errors.
+- [ ] Storage rules deny unapproved paths.
+- [ ] No Firebase service-account secrets are present in source.
+- [ ] Firebase-disabled state produces a readable configuration message rather than a blank page.

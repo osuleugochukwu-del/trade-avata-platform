@@ -30,35 +30,23 @@ const { tool } = Astro.props;
     {tool.kind === 'lot-size' && <div class="calculator-layout"><form class="card form" data-calculator="lot"><label>Units<input name="units" type="number" min="0" value="10000" /></label><label>Units per standard lot<input name="lot" type="number" min="1" value="100000" /></label><button class="button" type="submit">Convert to lots</button></form><aside class="result-panel" aria-live="polite"><span class="eyebrow">Lot size</span><strong data-result>0.10 lots</strong><p data-breakdown>Units ÷ units per standard lot.</p></aside></div>}
 
     {tool.kind === 'technical-analysis' && <div class="market-widget-shell card"><div class="widget-heading"><div><span class="eyebrow">TradingView</span><h2>Technical analysis</h2><p>Change the symbol and timeframe inside the widget when available.</p></div></div><div class="tv-widget"><script type="module" src="https://www.tradingview-widget.com/w/en/tv-technical-analysis.js"></script><tv-technical-analysis symbol="OANDA:XAUUSD" interval="1h" display-mode="gauge" use-container-size="true" theme="dark"></tv-technical-analysis></div></div>}
-
     {tool.kind === 'forex-table' && <div class="market-widget-shell card"><div class="widget-heading"><div><span class="eyebrow">TradingView</span><h2>Forex table</h2><p>Compare major currencies and switch between cross-rates and heatmap views.</p></div></div><div class="tv-widget"><script type="module" src="https://www.tradingview-widget.com/w/en/tv-forex-table.js"></script><tv-forex-table></tv-forex-table></div></div>}
-
     {tool.kind === 'market-data' && <div class="market-widget-shell card"><div class="widget-heading"><div><span class="eyebrow">TradingView</span><h2>Market overview</h2><p>A compact overview of major indices, forex and commodities.</p></div></div><div class="tv-widget"><script type="module" src="https://www.tradingview-widget.com/w/en/tv-market-data.js"></script><tv-market-data symbol-sectors='[{"sectionName":"Indices","symbols":["FOREXCOM:SPXUSD","FOREXCOM:NSXUSD","FOREXCOM:DJI","INDEX:NKY"]},{"sectionName":"Forex","symbols":["FX:EURUSD","FX:GBPUSD","FX:USDJPY","FX:USDCHF"]},{"sectionName":"Commodities","symbols":["TVC:GOLD","TVC:USOIL"]}]'></tv-market-data></div></div>}
-
     {tool.kind === 'tradingview-calendar' && <div class="market-widget-shell card"><div class="widget-heading"><div><span class="eyebrow">TradingView</span><h2>Economic calendar</h2><p>Use the widget filters to focus on currencies and event importance.</p></div></div><div class="tv-widget tv-calendar-widget"><div class="tradingview-widget-container"><div class="tradingview-widget-container__widget"></div><div class="tradingview-widget-copyright"><a href="https://www.tradingview.com/markets/currencies/economic-calendar/" target="_blank" rel="noopener nofollow">Economic Calendar</a> by TradingView</div><script is:inline type="text/javascript" src="https://s3.tradingview.com/external-embedding/embed-widget-events.js" async set:html={JSON.stringify({colorTheme:"dark",isTransparent:false,width:"100%",height:"650",locale:"en",importanceFilter:"0,1"})}></script></div></div></div>}
-
     {tool.slug === 'crypto-heatmap' && <div class="market-widget-shell card"><div class="widget-heading"><div><span class="eyebrow">TradingView</span><h2>Crypto coins heatmap</h2><p>A visual overview of crypto market performance, loaded only on this tool page.</p></div></div><div class="tv-widget tv-iframe-widget"><div class="tradingview-widget-container"><div class="tradingview-widget-container__widget"></div><div class="tradingview-widget-copyright"><a href="https://www.tradingview.com/crypto-screener/" target="_blank" rel="noopener nofollow">Crypto Coins Heatmap</a> by TradingView</div><script is:inline type="text/javascript" src="https://s3.tradingview.com/external-embedding/embed-widget-crypto-coins-heatmap.js" async set:html={JSON.stringify({dataSource:"Crypto",blockSize:"market_cap_calc",blockColor:"change",locale:"en",symbolUrl:"",colorTheme:"dark",hasTopBar:false,isDataSetEnabled:false,isZoomEnabled:true,hasSymbolTooltip:true,isMonoSize:false,width:"100%",height:"620"})}></script></div></div></div>}
-
     {tool.slug === 'correlation' && <div class="external-tool-note card"><span class="eyebrow">External provider</span><h2>Forex correlation</h2><p>Trade Avata keeps specialist correlation data outside its own backend. The provider can be opened without adding another market-data service to the public site.</p><a class="button button-outline" href="https://www.myfxbook.com/widgets" target="_blank" rel="noopener noreferrer">View Myfxbook widgets</a></div>}
-
     {tool.kind === 'session-clock' && <div class="session-tool card"><span class="eyebrow">Market timing</span><h2>Major trading sessions</h2><p>Times below are displayed in your browser's local time. Use the overlap labels as a planning aid rather than a trading signal.</p><div class="session-grid" data-session-grid></div></div>}
-
     {tool.kind === 'trade-planner' && <div class="planner-layout"><form class="card form" data-calculator="planner"><label>Instrument<input name="instrument" value="XAUUSD" /></label><label>Direction<select name="direction"><option>Long</option><option>Short</option></select></label><label>Entry<input name="entry" type="number" step="0.00001" value="3500" /></label><label>Stop loss<input name="stop" type="number" step="0.00001" value="3450" /></label><label>Take profit<input name="target" type="number" step="0.00001" value="3650" /></label><label>Risk (%)<input name="risk" type="number" step="0.01" value="1" /></label><button class="button" type="submit">Build trade plan</button></form><aside class="planner-output card" data-planner-output><span class="eyebrow">Plan summary</span><h2>Ready to plan.</h2><p>Enter your values and the summary will appear here.</p></aside></div>}
-
     {tool.kind === 'checklist' && <div class="card checklist-tool"><span class="eyebrow">Before entry</span><h2>Trade checklist</h2><p>Keep your pre-trade process visible and simple.</p><div class="checklist-inputs">{['I know why I am taking this trade.','My entry level is defined.','My stop loss is defined before entry.','My risk is within my daily limit.','My target or exit condition is defined.','There is no major event I am ignoring.'].map((item, i) => <label><input type="checkbox" /> <span>{item}</span></label>)}</div><p class="meta" data-checklist-status>0 of 6 checked</p></div>}
-
     {tool.kind === 'expectancy' && <div class="calculator-layout"><form class="card form" data-calculator="expectancy"><label>Win rate (%)<input name="win" type="number" min="0" max="100" value="50" /></label><label>Average win (R)<input name="avgwin" type="number" step="0.01" value="2" /></label><label>Average loss (R)<input name="avgloss" type="number" step="0.01" value="1" /></label><button class="button" type="submit">Calculate expectancy</button></form><aside class="result-panel" aria-live="polite"><span class="eyebrow">Expectancy</span><strong data-result>0.50R</strong><p data-breakdown>Average expected result per trade.</p></aside></div>}
-
     {tool.kind === 'journal' && <div class="journal-layout"><form class="card form" data-journal-form><label>Date<input name="date" type="date" /></label><label>Instrument<input name="instrument" placeholder="XAUUSD" /></label><label>Setup<textarea name="setup" placeholder="Why did this trade make sense?"></textarea></label><label>Notes<textarea name="notes" placeholder="What did you learn?"></textarea></label><button class="button" type="submit">Save note on this device</button><p class="meta" data-journal-status></p></form><aside class="card journal-list"><span class="eyebrow">Recent notes</span><div data-journal-list><p class="meta">No saved notes yet.</p></div></aside></div>}
   </div></section>
-
   <section class="section compact-section"><div class="container">
     <div class="section-head"><div><span class="eyebrow">Keep exploring</span><h2>Related tools</h2><p>Open another focused tool without returning to a giant dashboard.</p></div><a href={`${base}tools/`}>Tools Center →</a></div>
     <div class="related-tool-grid">
       {tools.filter(item => item.category === tool.category && item.slug !== tool.slug).slice(0, 4).map(item => <a class="card related-tool" href={`${base}tools/${item.slug}/`}><span class="tool-icon">TA</span><strong>{item.name}</strong><small>{item.description}</small><span>Open →</span></a>)}
     </div>
   </div></section>
-
   <section class="section compact-section"><div class="container info-strip"><div><span class="eyebrow">Keep it light</span><h2>One focused tool per page.</h2><p>Live market widgets come from established providers; Trade Avata stays focused on navigation, experience and useful planning utilities.</p></div><a class="button button-outline" href={`${base}tools/`}>Browse all tools</a></div></section>
 
 <script is:inline>
@@ -70,7 +58,6 @@ const { tool } = Astro.props;
   const result = root?.querySelector('[data-result]');
   const breakdown = root?.querySelector('[data-breakdown]');
   const get = name => Number(new FormData(form).get(name)) || 0;
-
   form?.addEventListener('submit', e => {
     e.preventDefault();
     if (kind === 'position-sizing') { const lots = (get('balance')*get('risk')/100) / (get('stop')*get('pointValue') || 1); result.textContent = `${lots.toFixed(2)} lots`; breakdown.textContent = `Risk amount: ${money(get('balance')*get('risk')/100)}`; }
@@ -83,66 +70,14 @@ const { tool } = Astro.props;
     if (kind === 'lot-size') { result.textContent = `${(get('units')/(get('lot') || 1)).toFixed(2)} lots`; breakdown.textContent = 'Units ÷ units per standard lot.'; }
     if (kind === 'expectancy') { const e = (get('win')/100*get('avgwin'))-((1-get('win')/100)*get('avgloss')); result.textContent = `${e >= 0 ? '+' : ''}${e.toFixed(2)}R`; breakdown.textContent = 'Expected average result per trade.'; }
   });
-
   const planner = root?.querySelector('[data-calculator="planner"]');
   const plannerOutput = root?.querySelector('[data-planner-output]');
-
-  planner?.addEventListener('submit', e => {
-    e.preventDefault();
-    const d = new FormData(planner);
-    const entry=Number(d.get('entry'))||0, stop=Number(d.get('stop'))||0, target=Number(d.get('target'))||0;
-    const risk=Math.abs(entry-stop), reward=Math.abs(target-entry);
-    plannerOutput.innerHTML = `<span class="eyebrow">Plan summary</span><h2>${d.get('instrument') || 'Instrument'} · ${d.get('direction')}</h2><div class="plan-summary"><span>Entry <strong>${entry}</strong></span><span>Stop <strong>${stop}</strong></span><span>Target <strong>${target}</strong></span><span>Risk <strong>${Number(d.get('risk'))||0}%</strong></span><span>R:R <strong>${risk ? (reward/risk).toFixed(2)+'R' : '—'}</strong></span></div>`;
-  });
-
-  const checks = [...root?.querySelectorAll('.checklist-inputs input') || []];
-  const status=root?.querySelector('[data-checklist-status]');
-  checks.forEach(c=>c.addEventListener('change',()=>{const n=checks.filter(x=>x.checked).length;if(status)status.textContent=`${n} of ${checks.length} checked`; }));
-
+  planner?.addEventListener('submit', e => { e.preventDefault(); const d = new FormData(planner); const entry=Number(d.get('entry'))||0, stop=Number(d.get('stop'))||0, target=Number(d.get('target'))||0; const risk=Math.abs(entry-stop), reward=Math.abs(target-entry); plannerOutput.innerHTML = `<span class="eyebrow">Plan summary</span><h2>${d.get('instrument') || 'Instrument'} · ${d.get('direction')}</h2><div class="plan-summary"><span>Entry <strong>${entry}</strong></span><span>Stop <strong>${stop}</strong></span><span>Target <strong>${target}</strong></span><span>Risk <strong>${Number(d.get('risk'))||0}%</strong></span><span>R:R <strong>${risk ? (reward/risk).toFixed(2)+'R' : '—'}</strong></span></div>`; });
+  const checks = [...root?.querySelectorAll('.checklist-inputs input') || []]; const status=root?.querySelector('[data-checklist-status]'); checks.forEach(c=>c.addEventListener('change',()=>{const n=checks.filter(x=>x.checked).length;if(status)status.textContent=`${n} of ${checks.length} checked`; }));
   const grid=root?.querySelector('[data-session-grid]');
-  if(grid){
-    const sessions=[['Sydney','Australia/Sydney',21,6],['Tokyo','Asia/Tokyo',0,9],['London','Europe/London',7,16],['New York','America/New_York',12,21]];
-    const parts=t=>Object.fromEntries(new Intl.DateTimeFormat('en-GB',{timeZone:t,hour:'2-digit',minute:'2-digit',hourCycle:'h23'}).formatToParts(new Date()).map(p=>[p.type,p.value]));
-    const local=new Intl.DateTimeFormat('en-GB',{hour:'2-digit',minute:'2-digit',hourCycle:'h23'}).format(new Date());
-    const openWindow=(start,end,h)=>start<end ? h>=start&&h<end : h>=start||h<end;
-    grid.innerHTML=sessions.map(([name,tz,start,end])=>{const p=parts(tz), h=Number(p.hour); return `<div class="session-card"><strong>${name}</strong><span>${p.hour}:${p.minute} local</span><small>${openWindow(start,end,h)?'Session window active':'Session window closed'} · ${tz}</small></div>`}).join('')+`<div class="session-local"><strong>Your browser time: ${local}</strong><span>Session times update when the page is refreshed.</span></div>`;
-  }
-
-  const favorite=root?.closest('main')?.querySelector('[data-favorite]');
-  const favKey=`trade-avata-fav-${slug}`;
-  const syncFav=()=>{let on=false;try{on=localStorage.getItem(favKey)==='1'}catch{} if(favorite){favorite.setAttribute('aria-pressed',String(on));favorite.innerHTML=on?'★ <span>Saved</span>':'☆ <span>Save</span>';}};
-  syncFav();
-  favorite?.addEventListener('click',()=>{try{const on=localStorage.getItem(favKey)==='1';localStorage.setItem(favKey,on?'0':'1');syncFav()}catch{}});
-
-  const escapeHtml = value => String(value ?? '').replace(/[&<>"']/g, char => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[char]));
-  const journalForm=root?.querySelector('[data-journal-form]');
-  const journalList=root?.querySelector('[data-journal-list]');
-  const journalStatus=root?.querySelector('[data-journal-status]');
-  const journalKey='trade-avata-journal';
-
-  const renderJournal=()=>{
-    if(!journalList)return;
-    let items=[];
-    try{items=JSON.parse(localStorage.getItem(journalKey)||'[]')}catch{}
-    journalList.innerHTML=items.length?items.slice(0,6).map(item=>`<article class="journal-entry"><strong>${escapeHtml(item.instrument||'Trade note')}</strong><small>${escapeHtml(item.date||'No date')}</small><p>${escapeHtml(item.setup||'')}</p><p>${escapeHtml(item.notes||'')}</p></article>`).join(''):'<p class="meta">No saved notes yet.</p>';
-  };
-
-  renderJournal();
-
-  journalForm?.addEventListener('submit',e=>{
-    e.preventDefault();
-    const d=new FormData(journalForm);
-    let items=[];
-    try{items=JSON.parse(localStorage.getItem(journalKey)||'[]')}catch{}
-    items.unshift({date:d.get('date'),instrument:d.get('instrument'),setup:d.get('setup'),notes:d.get('notes')});
-    try{
-      localStorage.setItem(journalKey,JSON.stringify(items.slice(0,20)));
-      journalForm.reset();
-      if(journalStatus)journalStatus.textContent='Saved on this device.';
-      renderJournal();
-    }catch{
-      if(journalStatus)journalStatus.textContent='Could not save in this browser.';
-    }
-  });
+  if(grid){ const sessions=[['Sydney','Australia/Sydney',21,6],['Tokyo','Asia/Tokyo',0,9],['London','Europe/London',7,16],['New York','America/New_York',12,21]]; const parts=t=>Object.fromEntries(new Intl.DateTimeFormat('en-GB',{timeZone:t,hour:'2-digit',minute:'2-digit',hourCycle:'h23'}).formatToParts(new Date()).map(p=>[p.type,p.value])); const local=new Intl.DateTimeFormat('en-GB',{hour:'2-digit',minute:'2-digit',hourCycle:'h23'}).format(new Date()); const openWindow=(start,end,h)=>start<end ? h>=start&&h<end : h>=start||h<end; grid.innerHTML=sessions.map(([name,tz,start,end])=>{const p=parts(tz), h=Number(p.hour); return `<div class="session-card"><strong>${name}</strong><span>${p.hour}:${p.minute} local</span><small>${openWindow(start,end,h)?'Session window active':'Session window closed'} · ${tz}</small></div>`}).join('')+`<div class="session-local"><strong>Your browser time: ${local}</strong><span>Session times update when the page is refreshed.</span></div>`; }
+  const favorite=root?.closest('main')?.querySelector('[data-favorite]'); const favKey=`trade-avata-fav-${slug}`; const syncFav=()=>{let on=false;try{on=localStorage.getItem(favKey)==='1'}catch{} if(favorite){favorite.setAttribute('aria-pressed',String(on));favorite.innerHTML=on?'★ <span>Saved</span>':'☆ <span>Save</span>';}}; syncFav(); favorite?.addEventListener('click',()=>{try{const on=localStorage.getItem(favKey)==='1';localStorage.setItem(favKey,on?'0':'1');syncFav()}catch{}});
+  const escapeHtml = value => String(value ?? '').replace(/[&<>"']/g, char => ({'&':'&amp;','<':'&lt;','>':'&gt;','\"':'&quot;',"'":'&#39;'}[char]));
+  const journalForm=root?.querySelector('[data-journal-form]'); const journalList=root?.querySelector('[data-journal-list]'); const journalStatus=root?.querySelector('[data-journal-status]'); const journalKey='trade-avata-journal'; const renderJournal=()=>{if(!journalList)return;let items=[];try{items=JSON.parse(localStorage.getItem(journalKey)||'[]')}catch{} journalList.innerHTML=items.length?items.slice(0,6).map(item=>`<article class="journal-entry"><strong>${escapeHtml(item.instrument||'Trade note')}</strong><small>${escapeHtml(item.date||'No date')}</small><p>${escapeHtml(item.setup||'')}</p><p>${escapeHtml(item.notes||'')}</p></article>`).join(''):'<p class="meta">No saved notes yet.</p>';}; renderJournal(); journalForm?.addEventListener('submit',e=>{e.preventDefault();const d=new FormData(journalForm);let items=[];try{items=JSON.parse(localStorage.getItem(journalKey)||'[]')}catch{} items.unshift({date:d.get('date'),instrument:d.get('instrument'),setup:d.get('setup'),notes:d.get('notes')});try{localStorage.setItem(journalKey,JSON.stringify(items.slice(0,20)));journalForm.reset();if(journalStatus)journalStatus.textContent='Saved on this device.';renderJournal()}catch{if(journalStatus)journalStatus.textContent='Could not save in this browser.'}});
 </script>
 </BaseLayout>

@@ -34,3 +34,32 @@ The archive is intentionally prepared before deployment. Local static checks are
 ## Tools Center
 
 The public tools architecture now uses a compact Tools Center at `/tools/` plus direct `/tools/[slug]/` pages. The header exposes a desktop mega-menu and mobile expandable categories. Lightweight calculators run locally; live market context is delegated to established widget providers where appropriate.
+
+## Layer 3 — Accounts + Backend
+
+This package extends the verified Layer 2 public platform with the Firebase account/data foundation.
+
+### Account features
+
+- Email/password registration and login
+- Google sign-in
+- Password reset
+- Authenticated account dashboard
+- Profile settings
+- Product entitlement, order, subscription and course-enrollment summaries
+- Authentication-aware redirects
+
+### Backend foundation
+
+- Firestore security rules
+- Firestore indexes
+- Storage security rules
+- User/role model
+- Product/course/access collections
+- Notifications, support, certificates, articles, announcements, site settings and feature flags
+
+### Firebase configuration
+
+Copy `.env.example` into the deployment environment and provide the six `PUBLIC_FIREBASE_*` values from the Firebase Web App configuration. Do not add service-account credentials to the repository or browser environment.
+
+The Firebase rules in `firebase/` must be deployed to the same Firebase project before authenticated production use.
