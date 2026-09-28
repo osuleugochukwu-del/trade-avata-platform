@@ -1,0 +1,202 @@
+---
+import BaseLayout from '../../../layouts/BaseLayout.astro';
+import { courses, getSampleLesson } from '../../../data/learning.js';
+const base = import.meta.env.BASE_URL;
+---
+<BaseLayout title="Lesson Reader — Trade Avata" description="Read a Trade Avata trading lesson.">
+  <section class="page-hero lesson-hero"><div class="container">
+    <a class="breadcrumb" href={`${base}learn/`}>← Learn</a>
+    <span class="eyebrow" id="lesson-course-label">Lesson reader</span>
+    <h1 id="lesson-title">Loading lesson…</h1>
+    <p id="lesson-summary">Preparing your lesson.</p>
+    <div class="meta-row" id="lesson-meta"></div>
+  </div></section>
+  <section class="section"><div class="container lesson-layout">
+    <main class="card lesson-reader" id="lesson-reader" aria-live="polite">
+      <div class="lesson-loading"><span class="eyebrow">Learning</span><h2>Loading content…</h2><p>We are preparing the lesson for you.</p></div>
+    </main>
+    <aside class="lesson-side">
+      <div class="card lesson-progress-card">
+        <span class="eyebrow">Your progress</span>
+        <div class="progress-track"><span id="progress-bar" style="width:0%"></span></div>
+        <strong id="progress-label">0%</strong>
+        <p id="progress-note" class="meta">Complete lessons in order to unlock the next one.</p>
+        <button class="button" id="complete-lesson" type="button" disabled>Mark lesson complete</button>
+        <a class="button button-outline" id="course-link" href={`${base}learn/`}>Back to course</a>
+      </div>
+      <div class="card lesson-nav-card">
+        <span class="eyebrow">Lesson navigation</span>
+        <div id="lesson-nav"><p class="meta">Loading…</p></div>
+      </div>
+    </aside>
+  </div></section>
+</BaseLayout>
+<script define:vars={{ sampleLessons: Object.fromEntries(courses.map(course => [course.slug, getSampleLesson(course.slug)])), courseTitles: Object.fromEntries(courses.map(course => [course.slug, course.title])) }}>
+  import { watchAuth } from '../../../lib/firebase/auth.js';
+  import { getCourseDocument, getCourseEnrollment, getCourseLesson, getCourseModules, getModuleLessons, getUserCourseProgress, saveLessonProgress } from '../../../lib/firebase/learning.js';
+
+  const params = new URLSearchParams(window.location.search);
+  const courseSlug = params.get('course') || '';
+  const lessonId = params.get('lesson') || '';
+  const title = document.querySelector('#lesson-title');
+  const summary = document.querySelector('#lesson-summary');
+  const courseLabel = document.querySelector('#lesson-course-label');
+  const meta = document.querySelector('#lesson-meta');
+  const reader = document.querySelector('#lesson-reader');
+  const progressBar = document.querySelector('#progress-bar');
+  const progressLabel = document.querySelector('#progress-label');
+  const progressNote = document.querySelector('#progress-note');
+  const completeButton = document.querySelector('#complete-lesson');
+  const courseLink = document.querySelector('#course-link');
+  const lessonNav = document.querySelector('#lesson-nav');
+  const base = document.body.dataset.baseUrl || '/';
+  const sample = sampleLessons[courseSlug];
+
+  courseLink.href = `${base}learn/${courseSlug}/`;
+
+  function safeUrl(value) {
+    try { const url = new URL(String(value || ''), window.location.href); return url.protocol === 'https:' ? url.href : ''; } catch { return ''; }
+  }
+
+  function addText(parent, tag, text, className = '') {
+    const el = document.createElement(tag);
+    if (className) el.className = className;
+    el.textContent = text || '';
+    parent.appendChild(el);
+    return el;
+  }
+
+  function renderBlocks(blocks) {
+    reader.innerHTML = '';
+    for (const block of Array.isArray(blocks) ? blocks : []) {
+      if (!block?.type) continue;
+      if (block.type === 'heading') addText(reader, `h${Math.min(3, Math.max(2, Number(block.level) || 2))}`, block.text, 'lesson-heading');
+      else if (block.type === 'paragraph') addText(reader, 'p', block.text, 'lesson-paragraph');
+      else if (block.type === 'quote') addText(reader, 'blockquote', block.text, 'lesson-quote');
+      else if (block.type === 'divider') reader.appendChild(document.createElement('hr'));
+      else if (block.type === 'list') {
+        const ul = document.createElement('ul'); ul.className = 'lesson-list';
+        for (const item of (Array.isArray(block.items) ? block.items : [])) addText(ul, 'li', item);
+        reader.appendChild(ul);
+      } else if (block.type === 'image' || block.type === 'chart') {
+        const url = safeUrl(block.url);
+        if (!url) continue;
+        const figure = document.createElement('figure'); figure.className = `lesson-figure ${block.type === 'chart' ? 'lesson-chart' : ''}`;
+        const img = document.createElement('img'); img.src = url; img.alt = block.alt || ''; img.loading = 'lazy'; img.decoding = 'async';
+        figure.appendChild(img); if (block.caption) addText(figure, 'figcaption', block.caption); reader.appendChild(figure);
+      } else if (block.type === 'callout' || block.type === 'warning' || block.type === 'takeaway' || block.type === 'example') {
+        const box = document.createElement('aside'); box.className = `lesson-callout ${block.type === 'example' ? 'lesson-example' : block.type === 'warning' ? 'tone-warning' : block.type === 'takeaway' ? 'tone-takeaway' : `tone-${block.tone || 'tip'}`}`;
+        addText(box, 'strong', block.title || (block.type === 'example' ? 'Example' : 'Note'));
+        addText(box, 'p', block.text); reader.appendChild(box);
+      } else if (block.type === 'orderedList') {
+        const ol = document.createElement('ol'); ol.className = 'lesson-list lesson-ordered-list';
+        for (const item of (Array.isArray(block.items) ? block.items : [])) addText(ol, 'li', item);
+        reader.appendChild(ol);
+      } else if (block.type === 'resource') {
+        const url = safeUrl(block.url); if (!url) continue;
+        const card = document.createElement('aside'); card.className = 'lesson-callout lesson-resource';
+        addText(card, 'strong', block.title || 'Resource'); addText(card, 'p', block.text || 'Related resource.');
+        const link = document.createElement('a'); link.className = 'text-link'; link.href = url; link.textContent = 'Open resource →'; card.appendChild(link); reader.appendChild(card);
+      } else if (block.type === 'quiz') {
+        const box = document.createElement('aside'); box.className = 'lesson-callout lesson-quiz';
+        addText(box, 'strong', 'Knowledge check'); addText(box, 'p', block.question || 'Check your understanding.');
+        const options = Array.isArray(block.options) ? block.options : [];
+        const group = document.createElement('div'); group.className = 'quiz-options';
+        const feedback = document.createElement('p'); feedback.className = 'meta'; feedback.setAttribute('aria-live', 'polite');
+        options.forEach((option, index) => { const button = document.createElement('button'); button.type = 'button'; button.className = 'button button-outline button-small'; button.textContent = option; button.addEventListener('click', () => { feedback.textContent = index === Number(block.answerIndex) ? 'Correct.' : 'Not quite. Review the lesson and try again.'; }); group.appendChild(button); });
+        box.append(group, feedback); reader.appendChild(box);
+      } else if (block.type === 'video') {
+        const url = safeUrl(block.url); const match = url.match(/vimeo\.com\/(?:video\/)?(\d+)/i);
+        if (!match) continue;
+        const wrap = document.createElement('div'); wrap.className = 'lesson-video';
+        const iframe = document.createElement('iframe'); iframe.src = `https://player.vimeo.com/video/${match[1]}`; iframe.title = block.title || 'Lesson video'; iframe.loading = 'lazy'; iframe.allow = 'autoplay; fullscreen; picture-in-picture'; iframe.allowFullscreen = true;
+        wrap.appendChild(iframe); reader.appendChild(wrap);
+      }
+    }
+  }
+
+  function renderNav(sequence, currentId, progress) {
+    lessonNav.innerHTML = '';
+    if (!sequence.length) { addText(lessonNav, 'p', 'No lesson sequence is available yet.', 'meta'); return; }
+    for (const lesson of sequence) {
+      const row = document.createElement('a'); row.className = 'lesson-nav-row';
+      const done = progress.some(item => item.lessonId === lesson.id && item.completed);
+      row.href = `${base}learn/lesson/?course=${encodeURIComponent(courseSlug)}&lesson=${encodeURIComponent(lesson.id)}`;
+      if (lesson.id === currentId) row.dataset.current = 'true';
+      row.dataset.locked = lesson.locked ? 'true' : 'false';
+      const number = document.createElement('span'); number.textContent = String(lesson.order || '').padStart(2, '0');
+      const text = document.createElement('span'); text.textContent = lesson.title || lesson.id;
+      const status = document.createElement('small'); status.textContent = done ? 'Complete' : (lesson.locked ? 'Locked' : 'Open');
+      row.append(number, text, status); lessonNav.appendChild(row);
+    }
+  }
+
+  function setProgress(percent, note) {
+    const value = Math.max(0, Math.min(100, Number(percent) || 0));
+    progressBar.style.width = `${value}%`; progressLabel.textContent = `${Math.round(value)}%`; progressNote.textContent = note || '';
+  }
+
+  function renderSample() {
+    if (!sample) return false;
+    courseLabel.textContent = courseTitles[courseSlug] || 'Learning';
+    title.textContent = sample.title;
+    summary.textContent = sample.summary;
+    meta.innerHTML = `<span>${sample.moduleTitle}</span><span>${sample.readTime}</span><span>Public sample</span>`;
+    renderBlocks(sample.blocks);
+    setProgress(0, 'This is a public sample lesson. Sign in and enroll to track protected lessons.');
+    completeButton.disabled = false;
+    completeButton.textContent = 'Create account to track progress';
+    completeButton.onclick = () => { window.location.href = `${base}register/`; };
+    lessonNav.innerHTML = ''; addText(lessonNav, 'p', 'Public sample lessons demonstrate the reading experience. Enrolled course lessons unlock sequentially.', 'meta');
+    return true;
+  }
+
+  async function loadProtected(user) {
+    if (!courseSlug || !lessonId) throw new Error('Choose a course and lesson to continue.');
+    const enrollment = await getCourseEnrollment(user.uid, courseSlug);
+    if (!enrollment || !['active', 'completed'].includes(enrollment.status)) throw new Error('This lesson is protected. Your account does not have an active enrollment for this course.');
+    const course = await getCourseDocument(courseSlug);
+    const modules = await getCourseModules(courseSlug);
+    const sequence = [];
+    for (const module of modules) {
+      const lessons = await getModuleLessons(courseSlug, module.id);
+      lessons.forEach(lesson => sequence.push({ ...lesson, moduleTitle: module.title }));
+    }
+    const progress = await getUserCourseProgress(user.uid, courseSlug);
+    const currentIndex = sequence.findIndex(item => item.id === lessonId);
+    if (currentIndex < 0) throw new Error('That lesson could not be found.');
+    const current = sequence[currentIndex];
+    const previous = sequence[currentIndex - 1];
+    const previousDone = !previous || progress.some(item => item.lessonId === previous.id && item.completed);
+    if (!previousDone) throw new Error('Complete the previous lesson before opening this one.');
+    const lesson = await getCourseLesson(courseSlug, current.moduleId, lessonId);
+    if (!lesson) throw new Error('Lesson content is not available yet.');
+    courseLabel.textContent = course?.title || courseTitles[courseSlug] || 'Course';
+    title.textContent = lesson.title || current.title;
+    summary.textContent = lesson.summary || 'Continue your Trade Avata learning path.';
+    meta.innerHTML = `<span>${current.moduleTitle || 'Module'}</span><span>${lesson.readTime || 'Lesson'}</span><span>Protected</span>`;
+    renderBlocks(lesson.blocks);
+    const done = progress.some(item => item.lessonId === lessonId && item.completed);
+    const percent = Math.round(((currentIndex + (done ? 1 : 0)) / Math.max(sequence.length, 1)) * 100);
+    setProgress(percent, done ? 'Lesson completed. The next lesson is now available.' : 'Complete this lesson to unlock the next lesson.');
+    completeButton.disabled = done;
+    completeButton.textContent = done ? 'Lesson completed' : 'Mark lesson complete';
+    completeButton.onclick = async () => {
+      completeButton.disabled = true; completeButton.textContent = 'Saving…';
+      try { await saveLessonProgress({ uid: user.uid, courseId: courseSlug, moduleId: current.moduleId, lessonId, completed: true, percent: 100 }); progress.push({ lessonId, completed: true }); setProgress(Math.round(((currentIndex + 1) / sequence.length) * 100), 'Lesson completed. The next lesson is now available.'); renderNav(sequence.map((item, index) => ({ ...item, locked: index > 0 && !progress.some(p => p.lessonId === sequence[index - 1].id && p.completed) && item.id !== lessonId })), lessonId, progress); completeButton.textContent = 'Lesson completed'; } catch (error) { completeButton.disabled = false; completeButton.textContent = 'Try again'; progressNote.textContent = error?.message || 'Could not save progress.'; }
+    };
+    const decorated = sequence.map((item, index) => ({ ...item, locked: index > 0 && !progress.some(p => p.lessonId === sequence[index - 1].id && p.completed) && item.id !== lessonId }));
+    renderNav(decorated, lessonId, progress);
+  }
+
+  if (!courseSlug || (!lessonId && !sample)) {
+    title.textContent = 'Choose a lesson'; summary.textContent = 'Open a course lesson from your course page or account.'; reader.innerHTML = ''; addText(reader, 'p', 'No lesson was selected.', 'meta');
+  } else if (sample) {
+    renderSample();
+  } else {
+    watchAuth(async user => {
+      if (!user) { window.location.href = `${base}login/?next=${encodeURIComponent(window.location.pathname + window.location.search)}`; return; }
+      try { await loadProtected(user); } catch (error) { reader.innerHTML = ''; const box = document.createElement('div'); box.className = 'lesson-access-error'; addText(box, 'h2', 'Lesson unavailable'); addText(box, 'p', error?.message || 'We could not open this lesson.'); const link = document.createElement('a'); link.className = 'button'; link.href = `${base}learn/${courseSlug}/`; link.textContent = 'Back to course'; box.appendChild(link); reader.appendChild(box); completeButton.disabled = true; }
+    });
+  }
+</script>

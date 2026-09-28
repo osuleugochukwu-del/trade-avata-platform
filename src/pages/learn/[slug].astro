@@ -1,11 +1,13 @@
 ---
 import BaseLayout from '../../layouts/BaseLayout.astro';
 import { courses } from '../../data/site.js';
+import { getSampleLesson } from '../../data/learning.js';
 const base = import.meta.env.BASE_URL;
 export function getStaticPaths() {
   return courses.map(course => ({ params: { slug: course.slug }, props: { course } }));
 }
 const { course } = Astro.props;
+const sample = getSampleLesson(course.slug);
 ---
 <BaseLayout title={`${course.title} — Trade Avata`} description={course.description}>
   <section class="page-hero course-detail-hero"><div class="container">
@@ -13,23 +15,25 @@ const { course } = Astro.props;
     <span class="eyebrow">{course.level}</span>
     <h1>{course.title}</h1>
     <p>{course.description}</p>
-    <div class="meta-row"><span>{course.modules} modules</span><span>{course.lessons} lessons</span><span>{course.duration}</span></div>
+    <div class="meta-row"><span>{course.modules} modules</span><span>{course.lessons} lessons</span><span>{course.duration}</span><span>Readable + video-ready</span></div>
   </div></section>
   <section class="section"><div class="container course-detail-grid">
     <article class="card course-preview-card">
-      <span class="eyebrow">Public preview</span>
-      <h2>See how the course is structured.</h2>
-      <p>This public course page is the lightweight front end. Protected enrollment, lesson progress, sequential unlocking and member access will connect to the backend learning layer.</p>
+      <span class="eyebrow">Learning path</span>
+      <h2>Read it. See it. Practice it.</h2>
+      <p>Trade Avata lessons can combine readable explanations, examples, charts, externally hosted images, optional video and key takeaways. Protected lessons unlock in sequence for enrolled students.</p>
       <div class="course-outline">
-        {Array.from({ length: Math.min(course.modules, 6) }, (_, i) => <div class="outline-row"><span>{String(i + 1).padStart(2, '0')}</span><div><strong>Module {i + 1}</strong><small>Course module preview</small></div><span>Locked</span></div>)}
+        {Array.from({ length: Math.min(course.modules, 6) }, (_, i) => <div class="outline-row"><span>{String(i + 1).padStart(2, '0')}</span><div><strong>Module {i + 1}</strong><small>Structured lessons and practical examples</small></div><span>{i === 0 ? 'Preview' : 'Locked'}</span></div>)}
       </div>
+      {sample ? <div class="sample-lesson-card"><span class="pill">Free sample</span><h3>{sample.title}</h3><p>{sample.summary}</p><a class="button button-small" href={`${base}learn/lesson/?course=${course.slug}&lesson=${sample.slug}`}>Read sample lesson →</a></div> : null}
       <div class="actions"><a class="button" href={`${base}register/`}>Create account</a><a class="button button-outline" href={`${base}login/`}>Log in</a></div>
     </article>
     <aside class="card course-delivery-card">
       <span class="eyebrow">Delivery</span>
       <h2>{course.delivery.type}</h2>
       <p>{course.delivery.label}</p>
-      <p class="meta">Video hosting and protected course access are intentionally separated from the public website.</p>
+      <div class="delivery-list"><span>📖 Readable lessons</span><span>🖼️ External image support</span><span>🎥 Optional Vimeo video</span><span>🔒 Protected student access</span><span>↗️ Progress + sequential unlocks</span></div>
+      <p class="meta">Large media stays outside the public website. Trade Avata manages the learning structure, access and progress.</p>
       <a class="button button-outline" href={`${base}contact/`}>Ask about the course</a>
     </aside>
   </div></section>

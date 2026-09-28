@@ -60,16 +60,19 @@ export const courses = [
   {
     slug: 'trading-for-complete-beginners', title: 'Trading for Complete Beginners', level: 'Beginner', modules: 12, lessons: 60, duration: '4h 20m',
     description: 'Start from zero with market basics, charts, orders, risk, psychology and a structured first trading plan.',
+    learningMode: 'readable + video',
     delivery: { type: 'Vimeo', label: 'Video lessons delivered through Vimeo' }
   },
   {
     slug: 'technical-analysis-foundations', title: 'Technical Analysis Foundations', level: 'Beginner → Intermediate', modules: 8, lessons: 32, duration: '3h 10m',
     description: 'Build a structured framework for reading price, trends, levels, momentum and trade scenarios.',
+    learningMode: 'readable + video',
     delivery: { type: 'Vimeo', label: 'Video lessons delivered through Vimeo' }
   },
   {
     slug: 'risk-management', title: 'Risk Management', level: 'All levels', modules: 6, lessons: 24, duration: '2h 05m',
     description: 'Learn position sizing, risk limits, drawdown and risk/reward planning.',
+    learningMode: 'readable + video',
     delivery: { type: 'Vimeo', label: 'Video lessons delivered through Vimeo' }
   }
 ];

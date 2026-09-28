@@ -1,61 +1,28 @@
 ---
 import BaseLayout from '../../layouts/BaseLayout.astro';
 ---
-
-<BaseLayout
-  title="Account Settings — Trade Avata"
-  description="Update your Trade Avata account profile."
->
-  <section class="page-hero">
-    <div class="container">
-      <span class="eyebrow">Account settings</span>
-      <h1>Your profile.</h1>
-      <p>Update the profile information stored with your Trade Avata account.</p>
-    </div>
-  </section>
-
-  <section class="section">
-    <div class="container" style="max-width:760px">
-      <form class="card form" id="settings-form">
-        <label>
-          Display name
-          <input id="settings-name" autocomplete="name" />
-        </label>
-
-        <label>
-          Profile photo URL
-          <input id="settings-photo" type="url" placeholder="https://…" />
-        </label>
-
-        <label>
-          Email
-          <input id="settings-email" type="email" readonly />
-        </label>
-
-        <button class="button" type="submit">Save profile</button>
-
-        <a class="text-link" href="../">← Back to account</a>
-
-        <p class="form-status" id="settings-status" aria-live="polite"></p>
-      </form>
-    </div>
-  </section>
+<BaseLayout title="Account Settings — Trade Avata" description="Update your Trade Avata account profile.">
+  <section class="page-hero"><div class="container"><span class="eyebrow">Account settings</span><h1>Your profile.</h1><p>Update the profile information stored with your Trade Avata account.</p></div></section>
+  <section class="section"><div class="container" style="max-width:760px">
+    <form class="card form" id="settings-form">
+      <label>Display name<input id="settings-name" autocomplete="name" /></label>
+      <label>Profile photo URL<input id="settings-photo" type="url" placeholder="https://…" /></label>
+      <label>Email<input id="settings-email" type="email" readonly /></label>
+      <button class="button" type="submit">Save profile</button>
+      <a class="text-link" href="../">← Back to account</a>
+      <p class="form-status" id="settings-status" aria-live="polite"></p>
+    </form>
+  </div></section>
 </BaseLayout>
-
 <script>
   import { watchAuth } from '../../lib/firebase/auth.js';
-  import {
-    ensureUserProfile,
-    getUserProfile,
-    updateUserProfile
-  } from '../../lib/firebase/db.js';
+  import { ensureUserProfile, getUserProfile, updateUserProfile } from '../../lib/firebase/db.js';
 
   const form = document.querySelector('#settings-form');
   const name = document.querySelector('#settings-name');
   const photo = document.querySelector('#settings-photo');
   const email = document.querySelector('#settings-email');
   const status = document.querySelector('#settings-status');
-
   let currentUser = null;
 
   watchAuth(async user => {
@@ -63,41 +30,28 @@ import BaseLayout from '../../layouts/BaseLayout.astro';
       window.location.href = '../../login/';
       return;
     }
-
     currentUser = user;
-
     try {
       await ensureUserProfile(user);
-
       const profile = await getUserProfile(user.uid);
-
       name.value = profile?.displayName || user.displayName || '';
       photo.value = profile?.photoURL || user.photoURL || '';
       email.value = user.email || '';
     } catch (error) {
-      status.textContent =
-        error?.message || 'Could not load your profile.';
+      status.textContent = error?.message || 'Could not load your profile.';
       status.dataset.error = 'true';
     }
   });
 
   form?.addEventListener('submit', async event => {
     event.preventDefault();
-
     if (!currentUser) return;
-
     status.textContent = 'Saving…';
-
     try {
-      await updateUserProfile(currentUser.uid, {
-        displayName: name.value,
-        photoURL: photo.value
-      });
-
+      await updateUserProfile(currentUser.uid, { displayName: name.value, photoURL: photo.value });
       status.textContent = 'Your profile has been updated.';
     } catch (error) {
-      status.textContent =
-        error?.message || 'Could not save your profile.';
+      status.textContent = error?.message || 'Could not save your profile.';
       status.dataset.error = 'true';
     }
   });

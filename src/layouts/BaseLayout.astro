@@ -14,7 +14,7 @@ const base = import.meta.env.BASE_URL;
     <title>{title}</title>
     <link rel="icon" type="image/png" href={`${base}brand/trade-avata-mark.png`} />
   </head>
-  <body>
+  <body data-base-url={base}>
     <Header />
     <main><slot /></main>
     <Footer />

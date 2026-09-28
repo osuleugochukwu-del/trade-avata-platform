@@ -1,0 +1,88 @@
+{
+  "notes": "Example seed shape only. Replace external URLs and content with your own material before importing. Protected lesson content should live in Firestore, not in the public GitHub Pages bundle.",
+  "course": {
+    "id": "trading-for-complete-beginners",
+    "title": "Trading for Complete Beginners",
+    "public": false,
+    "access": "entitlement"
+  },
+  "module": {
+    "id": "module-01",
+    "courseId": "trading-for-complete-beginners",
+    "title": "Trading Foundations",
+    "order": 1,
+    "public": false
+  },
+  "lesson": {
+    "id": "lesson-01",
+    "courseId": "trading-for-complete-beginners",
+    "moduleId": "module-01",
+    "title": "What Is a Market?",
+    "order": 1,
+    "public": false,
+    "readTime": "6 min read"
+  },
+  "content": {
+    "id": "body",
+    "previousProgressId": null,
+    "blocks": [
+      {
+        "type": "paragraph",
+        "text": "Write the lesson explanation here."
+      },
+      {
+        "type": "heading",
+        "level": 2,
+        "text": "Example"
+      },
+      {
+        "type": "paragraph",
+        "text": "Explain the example in simple language."
+      },
+      {
+        "type": "image",
+        "url": "https://your-image-host.example/chart.webp",
+        "alt": "Example trading chart",
+        "caption": "Replace this with a hosted image URL."
+      },
+      {
+        "type": "callout",
+        "tone": "important",
+        "title": "Important",
+        "text": "Add a key teaching point."
+      },
+      {
+        "type": "video",
+        "provider": "vimeo",
+        "url": "https://vimeo.com/your-video-id",
+        "title": "Optional lesson video"
+      },
+      {
+        "type": "takeaway",
+        "title": "Key takeaway",
+        "text": "Summarise the one idea the learner should remember."
+      },
+      {
+        "type": "warning",
+        "title": "Risk reminder",
+        "text": "Add an important caution or limitation."
+      },
+      {
+        "type": "orderedList",
+        "items": ["Step one", "Step two", "Step three"]
+      },
+      {
+        "type": "resource",
+        "title": "Related resource",
+        "text": "Link the learner to a relevant tool or guide.",
+        "url": "https://example.com/resource"
+      },
+      {
+        "type": "quiz",
+        "question": "Add a short knowledge-check question.",
+        "options": ["Answer A", "Answer B", "Answer C"],
+        "answerIndex": 0
+      }
+    ]
+  }
+}

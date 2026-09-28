@@ -20,6 +20,12 @@ service cloud.firestore {
       return resource.data.public == true;
     }
 
+    function isCourseEnrolled(courseId) {
+      return signedIn()
+        && exists(/databases/$(database)/documents/enrollments/$(request.auth.uid + '_' + courseId))
+        && get(/databases/$(database)/documents/enrollments/$(request.auth.uid + '_' + courseId)).data.status in ['active', 'completed'];
+    }
+
     match /users/{userId} {
       allow read: if isOwner(userId) || isAdmin();
       allow create: if isOwner(userId)
@@ -46,18 +52,28 @@ service cloud.firestore {
     }
 
     match /courses/{courseId} {
-      allow read: if isPublic(resource) || isAdmin();
+      allow read: if isPublic(resource) || isAdmin() || isCourseEnrolled(courseId);
       allow write: if isAdmin();
     }
 
     match /courses/{courseId}/modules/{moduleId} {
-      allow read: if isAdmin() || resource.data.public == true;
+      allow read: if isAdmin() || resource.data.public == true || isCourseEnrolled(courseId);
       allow write: if isAdmin();
     }
 
     match /courses/{courseId}/modules/{moduleId}/lessons/{lessonId} {
-      allow read: if isAdmin() || resource.data.public == true;
+      allow read: if isAdmin() || resource.data.public == true || isCourseEnrolled(courseId);
       allow write: if isAdmin();
+
+      match /content/{contentId} {
+        allow read: if isAdmin()
+          || resource.data.public == true
+          || (isCourseEnrolled(courseId)
+            && (!resource.data.keys().hasAny(['previousProgressId'])
+              || resource.data.previousProgressId == null
+              || exists(/databases/$(database)/documents/progress/$(resource.data.previousProgressId))));
+        allow write: if isAdmin();
+      }
     }
 
     match /announcements/{announcementId} {
@@ -87,7 +103,9 @@ service cloud.firestore {
 
     match /progress/{progressId} {
       allow read: if isAdmin() || isOwner(resource.data.userId);
-      allow write: if isAdmin();
+      allow create: if isOwner(request.resource.data.userId) && isCourseEnrolled(request.resource.data.courseId);
+      allow update: if isOwner(resource.data.userId) && isOwner(request.resource.data.userId) && resource.data.courseId == request.resource.data.courseId;
+      allow delete: if isAdmin();
     }
 
     match /entitlements/{entitlementId} {

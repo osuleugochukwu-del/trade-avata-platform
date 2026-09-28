@@ -1,4 +1,4 @@
-# Trade Avata Platform Architecture — Prototype 2
+# Trade Avata Platform Architecture — Layer 4
 
 ## Direction
 Trade Avata is a lightweight trading-technology company platform, not a large file warehouse.
@@ -114,3 +114,36 @@ Layer 3 adds the Firebase-backed account and data foundation without putting cre
 The browser may contain the Firebase web configuration, but it must never contain service-account credentials or trusted payment/entitlement logic. Payment verification and entitlement issuance remain trusted-backend responsibilities.
 
 Layer 3 does not attempt to finish the Layer 4 course engine or Layer 5 admin console. It establishes the authenticated data foundation those layers will use.
+
+
+## Layer 4 — Learning + Product Access
+
+Layer 4 adds the learning engine and entitlement-aware product/course experience while keeping the public site lightweight.
+
+### Readable learning system
+- Article-style lesson pages built from structured content blocks
+- Paragraphs, headings, examples, callouts, warnings, key takeaways, lists, ordered steps, quotes, dividers, images/charts, resources, quizzes and optional video
+- External HTTPS image URLs with alt text/captions so large images do not bloat the GitHub Pages bundle
+- Vimeo-ready video blocks; videos remain external
+- Public sample lessons for discoverability and previews
+- Protected lesson content fetched from a dedicated Firestore lesson-content document after authentication, enrollment and previous-lesson checks
+
+### Course access
+- Course → module → lesson structure
+- Enrollment-based access
+- Lesson progress stored per user/course/module/lesson
+- Resume/current lesson support through progress records
+- Sequential unlocking enforced in the learning UI: the next lesson stays locked until the previous lesson is completed
+- Completion tracking and progress percentage
+- Account pages can link users back into their learning
+
+### Product access
+- Product entitlements remain separate from account registration
+- Product delivery can remain external (cTrader Store, MQL5 Market, private download or web application)
+- Protected product download/access links should be issued only after entitlement verification in a trusted backend flow
+
+### Dynamic lesson URL strategy
+Because the public site is deployed as static GitHub Pages, arbitrary future Firestore lessons cannot create new build-time Astro files. Layer 4 therefore uses a stable lesson reader route with query parameters for backend-driven lessons. This keeps the site static, lightweight and compatible with admin-created lessons later.
+
+### Layer 4 content example
+`firebase/seed/learning-content.example.json` documents the Firestore content shape without shipping protected course material into the public bundle.

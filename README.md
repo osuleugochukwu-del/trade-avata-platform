@@ -1,70 +1,81 @@
-# Trade Avata — My Trading Complete Module
+# Trade Avata Platform — Layer 4
 
-This package is the **complete My Trading interface module** discussed for the current Trade Avata website.
+Trade Avata is being built as a lightweight trading-technology company platform for products, tools, applications, education and future solutions.
 
-## What is included
+## Prototype 2 focus
+This phase expands the public platform without turning the website into a large file repository.
 
-- Dashboard
-- Accounts / Connect Account
-- Performance / financial analysis
-- Full Trades
-- Trading Calendar
-- Strategies
-- Risk
-- Bookkeeping
-- Trade Avata Insights
-- Reports
-- Download Center
-- PDF download actions
-- Spreadsheet/CSV download actions
-- Complete-account download
-- Desktop sidebar
-- Mobile horizontal navigation/cards
-- Mobile bottom navigation
-- PWA manifest + service worker
-- Existing Astro BaseLayout integration
-- Existing `BASE_URL` support
+- Product catalogue with category, platform, price and availability filters
+- Product detail pages with an explicit delivery model
+- External-delivery-ready links for cTrader Store, MQL5 Market and future software downloads
+- Vimeo-ready course delivery metadata
+- First working Position Size Calculator
+- Performance-first public architecture
+- Updated architecture documentation
 
-## Important
+## Delivery principle
+Large or specialist assets should live where they are best delivered:
 
-This is a **drop-in website module**, not a replacement for the entire Trade Avata public website.
+- Vimeo → course video
+- cTrader Store → cTrader products
+- MQL5 Market → MT4/MT5 products where appropriate
+- External/private storage → large software installers
+- Trade Avata → catalogue, account/access experience and lightweight web tools
 
-The UI uses demo values so the interface can render immediately. The Connect/Sync buttons are placeholders for the real account connector layer.
+Do not add real external product URLs until the corresponding live product URL is supplied and verified.
 
-## Install into the existing Astro website
+## Local verification
+```bash
+npm run verify
+```
 
-1. Unzip this package.
-2. Copy the contents into the root of the existing `trade-avata-platform` repository.
-3. Keep your existing `src/layouts/BaseLayout.astro`.
-4. Keep your existing Firebase/auth/public pages.
-5. Do NOT delete the existing Tools or other public pages.
-6. The package adds:
-   - `src/pages/my-trading/index.astro`
-   - `public/my-trading-manifest.webmanifest`
-   - `public/my-trading-sw.js`
-7. Run:
-   `npm install`
-   `npm run build`
-8. Test locally:
-   `npm run dev`
-9. Open:
-   `/my-trading/`
-10. After committing/pushing, the GitHub Pages route should follow the site's configured base URL, e.g. `/trade-avata-platform/my-trading/`.
+The archive is intentionally prepared before deployment. Local static checks are included; the real Astro production build and browser/deployment checks are reserved for the later deployment phase.
 
-## Keeping everything synced
+## Tools Center
 
-The module uses:
-`const base = import.meta.env.BASE_URL;`
+The public tools architecture now uses a compact Tools Center at `/tools/` plus direct `/tools/[slug]/` pages. The header exposes a desktop mega-menu and mobile expandable categories. Lightweight calculators run locally; live market context is delegated to established widget providers where appropriate.
 
-That means it follows the same Astro base path as the existing site rather than hard-coding a separate website.
+## Layer 3 — Accounts + Backend
 
-## Production data layer
+This package extends the verified Layer 2 public platform with the Firebase account/data foundation.
 
-The UI is ready to receive real normalized data. The next layer should connect:
-CSV / cTrader / MetaTrader / broker source
-→ normalized account/trade data
-→ analytics engine
-→ these panels
-→ PDF/CSV/XLSX exports.
+### Account features
 
-Do not put broker secrets or Firebase service-account credentials in browser code.
+- Email/password registration and login
+- Google sign-in
+- Password reset
+- Authenticated account dashboard
+- Profile settings
+- Product entitlement, order, subscription and course-enrollment summaries
+- Authentication-aware redirects
+
+### Backend foundation
+
+- Firestore security rules
+- Firestore indexes
+- Storage security rules
+- User/role model
+- Product/course/access collections
+- Notifications, support, certificates, articles, announcements, site settings and feature flags
+
+### Firebase configuration
+
+Copy `.env.example` into the deployment environment and provide the six `PUBLIC_FIREBASE_*` values from the Firebase Web App configuration. Do not add service-account credentials to the repository or browser environment.
+
+The Firebase rules in `firebase/` must be deployed to the same Firebase project before authenticated production use.
+
+
+## Layer 4 — Learning + Product Access
+
+This package adds the learning engine on top of the Layer 3 account/backend foundation.
+
+- Readable lesson/article experience with structured content blocks
+- Public sample lessons for course previews
+- Firestore-backed protected lesson metadata/content for enrolled students
+- External image/chart URLs, readable content blocks, resources, quizzes and Vimeo-ready video blocks to keep the website light
+- Sequential lesson unlocking and progress tracking
+- Course enrollment-aware access
+- Stable `/learn/lesson/` reader route for dynamic Firestore lessons on static GitHub Pages
+- Example Firestore lesson seed shape under `firebase/seed/`
+
+Protected course material is intentionally not embedded into the public JavaScript bundle.
