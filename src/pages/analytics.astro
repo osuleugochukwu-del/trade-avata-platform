@@ -1,7 +1,7 @@
 ---
-import { demoAccount, accounts, trades, monthly, symbols, strategies, sessions, weekday, equity } from '../../lib/analytics/demo.js';
-import { buildAIAnalyticsEvidence, getAIAnalyticsPrompt, requestAIAnalytics } from '../../lib/analytics/ai.js';
-import '../../styles/analytics.css';
+import { demoAccount, accounts, trades, monthly, symbols, strategies, sessions, weekday, equity } from '../lib/analytics/demo.js';
+import { buildAIAnalyticsEvidence, getAIAnalyticsPrompt, requestAIAnalytics } from '../lib/analytics/ai.js';
+import '../styles/analytics.css';
 
 const base = import.meta.env.BASE_URL;
 const json = (value) => JSON.stringify(value);
