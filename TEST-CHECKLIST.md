@@ -69,3 +69,30 @@
 - [ ] Storage rules deny unapproved paths.
 - [ ] No Firebase service-account secrets are present in source.
 - [ ] Firebase-disabled state produces a readable configuration message rather than a blank page.
+
+## Layer 5 — Admin + Business Control
+- [ ] Sign in as admin and staff role
+- [ ] Non-admin is denied admin workspace
+- [ ] Product create/edit/delete
+- [ ] Course create/edit/delete
+- [ ] Article create/edit/delete
+- [ ] User role changes
+- [ ] Order list
+- [ ] Announcement create/edit/delete
+- [ ] Site settings and feature flags
+- [ ] Audit log visibility
+- [ ] Admin mobile navigation
+- [ ] Firestore rules independently block unauthorized writes
+
+## Final inspection additions
+- [x] Learning Builder route/panel exists.
+- [x] Module and lesson management uses Firestore subcollections.
+- [x] Lesson content blocks can be arranged without editing source code.
+- [x] Enrollments and product entitlements can be managed from admin control.
+- [x] Subscriptions, support tickets and certificates are visible to admin/staff.
+- [x] Published Firestore articles have a public reader route.
+- [x] Only admin can write role documents; staff cannot grant admin access.
+- [x] Audit logs are append-only from Firestore rules.
+- [x] Key admin actions record audit entries.
+- [ ] Final legal Terms, Privacy and Risk Disclosure wording must be reviewed before production launch.
+- [ ] Production Astro build must be confirmed by a successful dependency install/build (local install timed out in this environment).

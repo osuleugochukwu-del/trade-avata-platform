@@ -1,5 +1,5 @@
 ---
-import BaseLayout from '../../layouts/BaseLayout.astro';
+import BaseLayout from '../../../layouts/BaseLayout.astro';
 ---
 <BaseLayout title="Account Settings — Trade Avata" description="Update your Trade Avata account profile.">
   <section class="page-hero"><div class="container"><span class="eyebrow">Account settings</span><h1>Your profile.</h1><p>Update the profile information stored with your Trade Avata account.</p></div></section>
@@ -15,8 +15,8 @@ import BaseLayout from '../../layouts/BaseLayout.astro';
   </div></section>
 </BaseLayout>
 <script>
-  import { watchAuth } from '../../lib/firebase/auth.js';
-  import { ensureUserProfile, getUserProfile, updateUserProfile } from '../../lib/firebase/db.js';
+  import { watchAuth } from '../../../lib/firebase/auth.js';
+  import { ensureUserProfile, getUserProfile, updateUserProfile } from '../../../lib/firebase/db.js';
 
   const form = document.querySelector('#settings-form');
   const name = document.querySelector('#settings-name');

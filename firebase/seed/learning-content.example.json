@@ -56,32 +56,6 @@
         "provider": "vimeo",
         "url": "https://vimeo.com/your-video-id",
         "title": "Optional lesson video"
-      },
-      {
-        "type": "takeaway",
-        "title": "Key takeaway",
-        "text": "Summarise the one idea the learner should remember."
-      },
-      {
-        "type": "warning",
-        "title": "Risk reminder",
-        "text": "Add an important caution or limitation."
-      },
-      {
-        "type": "orderedList",
-        "items": ["Step one", "Step two", "Step three"]
-      },
-      {
-        "type": "resource",
-        "title": "Related resource",
-        "text": "Link the learner to a relevant tool or guide.",
-        "url": "https://example.com/resource"
-      },
-      {
-        "type": "quiz",
-        "question": "Add a short knowledge-check question.",
-        "options": ["Answer A", "Answer B", "Answer C"],
-        "answerIndex": 0
       }
     ]
   }

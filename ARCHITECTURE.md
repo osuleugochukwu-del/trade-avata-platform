@@ -122,7 +122,7 @@ Layer 4 adds the learning engine and entitlement-aware product/course experience
 
 ### Readable learning system
 - Article-style lesson pages built from structured content blocks
-- Paragraphs, headings, examples, callouts, warnings, key takeaways, lists, ordered steps, quotes, dividers, images/charts, resources, quizzes and optional video
+- Paragraphs, headings, examples, callouts, lists, quotes, dividers, images and optional video
 - External HTTPS image URLs with alt text/captions so large images do not bloat the GitHub Pages bundle
 - Vimeo-ready video blocks; videos remain external
 - Public sample lessons for discoverability and previews
@@ -147,3 +147,46 @@ Because the public site is deployed as static GitHub Pages, arbitrary future Fir
 
 ### Layer 4 content example
 `firebase/seed/learning-content.example.json` documents the Firestore content shape without shipping protected course material into the public bundle.
+
+## Layer 5 — Admin + Business Control
+
+Layer 5 completes the business-control surface for the platform. The admin UI is intentionally a client-side protected workspace because the public site remains a static Astro/GitHub Pages deployment. Firestore Security Rules remain the authoritative permission boundary.
+
+### Included
+- Protected admin/staff control centre
+- Dashboard overview and operational counts
+- Product catalogue CRUD
+- Course catalogue CRUD
+- Public learning article/content CRUD
+- User list and role management
+- Order visibility
+- Announcement scheduling/content management
+- Site settings and feature flags
+- Audit-log viewer
+- Responsive admin navigation for desktop and mobile
+- External image URL support for content so large assets are not bundled into the site
+- Explicit admin/staff role checks before the workspace loads
+
+### Security boundary
+- Admin UI checks the signed-in user's Firestore role before enabling the workspace.
+- Firestore rules independently enforce admin/staff writes and private-data boundaries.
+- The browser never receives a Firebase service account or privileged server credential.
+- Payment verification, entitlement issuance and other trusted operations remain server-side responsibilities.
+- Client-side role checks are UX gates only; they are not treated as the security boundary.
+
+### Business-control principle
+Routine catalogue/content/business changes should be possible from the admin workspace without editing source code. Static GitHub Pages still requires a rebuild for public Astro routes that are compiled into the site, while Firestore-backed content/settings can be changed without changing the repository.
+
+## Final inspection corrections — Layer 5
+
+The final inspection added the following controls:
+- protected Learning Builder for course → module → lesson structure;
+- visual lesson content-block editing for headings, paragraphs, examples, callouts, lists, images, video, quotes and dividers;
+- admin access-control workspace for enrollments, product entitlements, subscriptions, support tickets and certificates;
+- public article reader at `/articles/?slug=...` for published Firestore articles;
+- role changes restricted at the Firestore rule boundary to `admin` accounts; staff retain operational control but cannot grant roles;
+- append-only audit-log writes (updates/deletes denied);
+- admin audit events for key business/control changes;
+- external HTTPS media remains outside the public bundle.
+
+Production note: legal Terms, Privacy and Risk Disclosure text still requires final business/legal review before public launch. This is intentionally not invented or treated as a technical pass.

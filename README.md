@@ -72,7 +72,7 @@ This package adds the learning engine on top of the Layer 3 account/backend foun
 - Readable lesson/article experience with structured content blocks
 - Public sample lessons for course previews
 - Firestore-backed protected lesson metadata/content for enrolled students
-- External image/chart URLs, readable content blocks, resources, quizzes and Vimeo-ready video blocks to keep the website light
+- External image URLs and Vimeo-ready video blocks to keep the website light
 - Sequential lesson unlocking and progress tracking
 - Course enrollment-aware access
 - Stable `/learn/lesson/` reader route for dynamic Firestore lessons on static GitHub Pages

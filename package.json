@@ -1,13 +1,13 @@
 {
   "name": "trade-avata-platform",
-  "version": "0.3.0-layer4",
+  "version": "0.4.0-layer5",
   "private": true,
   "type": "module",
   "scripts": {
     "dev": "astro dev",
     "build": "astro build",
     "preview": "astro preview",
-    "verify": "node scripts/verify-prototype.mjs && node scripts/verify-layer2-complete.mjs && node scripts/verify-layer2-final.mjs && node scripts/verify-tools.mjs && node scripts/verify-layer3.mjs && node scripts/verify-layer4.mjs"
+    "verify": "node scripts/verify-prototype.mjs && node scripts/verify-layer2-complete.mjs && node scripts/verify-layer2-final.mjs && node scripts/verify-tools.mjs && node scripts/verify-layer3.mjs && node scripts/verify-layer4.mjs && node scripts/verify-layer5.mjs"
   },
   "dependencies": {
     "astro": "latest",

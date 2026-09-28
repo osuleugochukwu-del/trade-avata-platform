@@ -1,4 +1,4 @@
-export const blockTypes = ['heading', 'paragraph', 'image', 'chart', 'callout', 'warning', 'takeaway', 'list', 'orderedList', 'quote', 'example', 'video', 'resource', 'quiz', 'divider'];
+export const blockTypes = ['heading', 'paragraph', 'image', 'callout', 'list', 'quote', 'example', 'video', 'divider'];
 
 export function normalizeBlocks(blocks) {
   return Array.isArray(blocks) ? blocks.filter(block => block && block.type && blockTypes.includes(block.type)) : [];

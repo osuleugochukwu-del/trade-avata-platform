@@ -29,7 +29,7 @@ for (const item of ['getCourseDocument','getCourseEnrollment','getCourseModules'
   if (!learning.includes(`export async function ${item}`)) errors.push(`Learning API missing ${item}.`);
 }
 const content = read('src/lib/learning/content.js');
-for (const type of ['heading','paragraph','image','chart','callout','warning','takeaway','list','orderedList','quote','example','video','resource','quiz','divider']) if (!content.includes(`'${type}'`)) errors.push(`Learning content schema missing ${type}.`);
+for (const type of ['heading','paragraph','image','callout','list','quote','example','video','divider']) if (!content.includes(`'${type}'`)) errors.push(`Learning content schema missing ${type}.`);
 const reader = read('src/pages/learn/lesson/index.astro');
 for (const token of ['URLSearchParams','getCourseEnrollment','saveLessonProgress','sequentially','vimeo.com','loading = \'lazy\'']) if (!reader.includes(token)) errors.push(`Lesson reader missing expected feature: ${token}.`);
 const rules = read('firebase/firestore.rules');

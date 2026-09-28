@@ -1,0 +1,43 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+---
+<BaseLayout title="Article — Trade Avata" description="Trade Avata trading knowledge and educational articles.">
+  <section class="page-hero"><div class="container"><span class="eyebrow">KNOWLEDGE</span><h1 id="article-title">Article</h1><p id="article-summary">Loading article…</p></div></section>
+  <section class="section"><div class="container article-reader"><article class="card" id="article-reader"><p class="meta">Loading content…</p></article></div></section>
+</BaseLayout>
+<script>
+  import { collection, getDocs, limit, query, where } from 'firebase/firestore';
+  import { db } from '../../lib/firebase/db.js';
+  const params = new URLSearchParams(window.location.search);
+  const slug = params.get('slug')?.trim();
+  const title = document.querySelector('#article-title');
+  const summary = document.querySelector('#article-summary');
+  const reader = document.querySelector('#article-reader');
+  const safeUrl = value => { try { const u = new URL(String(value || ''), window.location.href); return u.protocol === 'https:' ? u.href : ''; } catch { return ''; } };
+  const add = (parent, tag, value, cls='') => { const el=document.createElement(tag); el.textContent=value||''; if(cls) el.className=cls; parent.appendChild(el); return el; };
+  function renderBlocks(blocks) {
+    reader.innerHTML='';
+    for (const block of Array.isArray(blocks)?blocks:[]) {
+      if (!block?.type) continue;
+      if (block.type==='heading') add(reader, `h${Math.min(3,Math.max(2,Number(block.level)||2))}`, block.text, 'lesson-heading');
+      else if (block.type==='paragraph') add(reader,'p',block.text,'lesson-paragraph');
+      else if (block.type==='quote') add(reader,'blockquote',block.text,'lesson-quote');
+      else if (block.type==='list') { const ul=document.createElement('ul'); ul.className='lesson-list'; (Array.isArray(block.items)?block.items:String(block.text||'').split('\n')).filter(Boolean).forEach(x=>add(ul,'li',x)); reader.appendChild(ul); }
+      else if (block.type==='divider') reader.appendChild(document.createElement('hr'));
+      else if (block.type==='image') { const u=safeUrl(block.url); if(!u) continue; const f=document.createElement('figure'); f.className='lesson-figure'; const img=document.createElement('img'); img.src=u; img.alt=block.alt||''; img.loading='lazy'; f.appendChild(img); if(block.caption) add(f,'figcaption',block.caption); reader.appendChild(f); }
+      else if (block.type==='callout'||block.type==='example') { const box=document.createElement('aside'); box.className='lesson-callout'; add(box,'strong',block.title||'Note'); add(box,'p',block.text); reader.appendChild(box); }
+      else if (block.type==='video') { const u=safeUrl(block.url); const m=u.match(/vimeo\.com\/(?:video\/)?(\d+)/i); if(!m) continue; const iframe=document.createElement('iframe'); iframe.src=`https://player.vimeo.com/video/${m[1]}`; iframe.title=block.title||'Article video'; iframe.loading='lazy'; iframe.allow='autoplay; fullscreen; picture-in-picture'; iframe.allowFullscreen=true; reader.appendChild(iframe); }
+    }
+  }
+  async function load() {
+    if(!slug || !db) { title.textContent='Article not found'; summary.textContent='Choose a published article link.'; reader.innerHTML='<p class="meta">No article was selected.</p>'; return; }
+    try {
+      const snap=await getDocs(query(collection(db,'articles'),where('slug','==',slug),where('public','==',true),limit(1)));
+      if(snap.empty) throw new Error('Article not found.');
+      const article=snap.docs[0].data(); title.textContent=article.title||'Article'; summary.textContent=article.summary||''; document.title=`${article.title||'Article'} — Trade Avata`;
+      if(Array.isArray(article.blocks) && article.blocks.length) renderBlocks(article.blocks);
+      else { reader.innerHTML=''; String(article.body||'').split(/\n\n+/).filter(Boolean).forEach(p=>add(reader,'p',p,'lesson-paragraph')); }
+    } catch(e) { title.textContent='Article unavailable'; summary.textContent=e?.message||'Could not load this article.'; reader.innerHTML='<p class="meta">Please try again later.</p>'; }
+  }
+  load();
+</script>

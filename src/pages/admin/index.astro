@@ -1,0 +1,281 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+---
+<BaseLayout title="Admin — Trade Avata" description="Trade Avata administration and business control.">
+  <section class="page-hero admin-hero">
+    <div class="container">
+      <span class="eyebrow">ADMIN CONTROL</span>
+      <h1>Trade Avata Control Centre</h1>
+      <p>Manage products, learning, users, access, announcements, settings and platform activity from one protected workspace.</p>
+    </div>
+  </section>
+  <section class="section">
+    <div class="container admin-shell">
+      <aside class="admin-sidebar card">
+        <div class="admin-brand"><img src={`${import.meta.env.BASE_URL}brand/trade-avata-mark.png`} alt="Trade Avata" /><div><strong>Trade Avata</strong><small>Admin</small></div></div>
+        <nav aria-label="Admin navigation" data-admin-nav>
+          <button type="button" class="admin-nav-item is-active" data-panel="overview">Overview</button>
+          <button type="button" class="admin-nav-item" data-panel="products">Products</button>
+          <button type="button" class="admin-nav-item" data-panel="courses">Courses</button>
+          <button type="button" class="admin-nav-item" data-panel="content">Learning Content</button>
+          <button type="button" class="admin-nav-item" data-panel="builder">Learning Builder</button>
+          <button type="button" class="admin-nav-item" data-panel="users">Users & Roles</button>
+          <button type="button" class="admin-nav-item" data-panel="orders">Orders</button>
+          <button type="button" class="admin-nav-item" data-panel="access">Access & Support</button>
+          <button type="button" class="admin-nav-item" data-panel="announcements">Announcements</button>
+          <button type="button" class="admin-nav-item" data-panel="settings">Site Settings</button>
+          <button type="button" class="admin-nav-item" data-panel="audit">Audit Log</button>
+        </nav>
+        <a class="button button-secondary" href={`${import.meta.env.BASE_URL}account/`}>Back to account</a>
+      </aside>
+      <div class="admin-main">
+        <div id="admin-status" class="admin-status card" aria-live="polite">Checking administrator access…</div>
+
+        <section class="admin-panel is-active" data-admin-panel="overview">
+          <div class="section-head compact"><div><span class="eyebrow">OVERVIEW</span><h2>Platform at a glance</h2></div><button class="button button-secondary" data-refresh>Refresh</button></div>
+          <div class="admin-stat-grid" id="admin-stats"></div>
+          <div class="admin-grid-2">
+            <div class="card admin-panel-card"><h3>Quick actions</h3><div class="quick-actions"><button data-go-panel="products">Add product</button><button data-go-panel="courses">Manage courses</button><button data-go-panel="announcements">New announcement</button><button data-go-panel="users">Manage users</button></div></div>
+            <div class="card admin-panel-card"><h3>Recent activity</h3><div id="admin-recent" class="admin-list"></div></div>
+          </div>
+        </section>
+
+        <section class="admin-panel" data-admin-panel="products">
+          <div class="section-head compact"><div><span class="eyebrow">CATALOGUE</span><h2>Products</h2></div><button class="button" data-new-product>New product</button></div>
+          <form class="card admin-form" id="product-form" hidden><input type="hidden" name="id" /><div class="admin-form-grid"><label>Name<input name="name" required /></label><label>Slug<input name="slug" required /></label><label>Category<input name="category" required /></label><label>Platform<input name="platform" /></label><label>Price<input name="price" /></label><label>Availability<input name="availability" value="available" /></label><label>Delivery model<input name="deliveryModel" /></label><label>External URL<input name="externalUrl" type="url" /></label></div><label>Description<textarea name="description" rows="4"></textarea></label><label class="checkbox-row"><input name="visible" type="checkbox" checked /> Visible publicly</label><label class="checkbox-row"><input name="featured" type="checkbox" /> Featured</label><div class="form-actions"><button class="button" type="submit">Save product</button><button class="button button-secondary" type="button" data-cancel-form="product-form">Cancel</button></div></form>
+          <div id="products-admin-list" class="admin-table-wrap"></div>
+        </section>
+
+        <section class="admin-panel" data-admin-panel="courses">
+          <div class="section-head compact"><div><span class="eyebrow">LEARNING</span><h2>Courses</h2></div><button class="button" data-new-course>New course</button></div>
+          <form class="card admin-form" id="course-form" hidden><input type="hidden" name="id" /><div class="admin-form-grid"><label>Title<input name="title" required /></label><label>Slug<input name="slug" required /></label><label>Level<input name="level" value="All levels" /></label><label>Access<input name="access" value="public" /></label><label>Duration<input name="duration" /></label><label>Lesson count<input name="lessonCount" type="number" min="0" /></label></div><label>Description<textarea name="description" rows="4"></textarea></label><label class="checkbox-row"><input name="public" type="checkbox" checked /> Public preview</label><div class="form-actions"><button class="button" type="submit">Save course</button><button class="button button-secondary" type="button" data-cancel-form="course-form">Cancel</button></div></form>
+          <div id="courses-admin-list" class="admin-table-wrap"></div>
+        </section>
+
+        <section class="admin-panel" data-admin-panel="content">
+          <div class="section-head compact"><div><span class="eyebrow">CONTENT</span><h2>Learning content</h2></div><button class="button" data-new-article>New article</button></div>
+          <form class="card admin-form" id="article-form" hidden><input type="hidden" name="id" /><div class="admin-form-grid"><label>Title<input name="title" required /></label><label>Slug<input name="slug" required /></label><label>Category<input name="category" /></label><label>Read time<input name="readTime" /></label></div><label>Summary<textarea name="summary" rows="3"></textarea></label><label>Body / notes<textarea name="body" rows="9" placeholder="Write readable educational content here. Protected course lessons can be stored separately in the course lesson content structure."></textarea></label><label>Hero image URL<input name="imageUrl" type="url" placeholder="https://…" /></label><label class="checkbox-row"><input name="public" type="checkbox" checked /> Published publicly</label><div class="form-actions"><button class="button" type="submit">Save article</button><button class="button button-secondary" type="button" data-cancel-form="article-form">Cancel</button></div></form>
+          <div id="articles-admin-list" class="admin-table-wrap"></div>
+        </section>
+
+        <section class="admin-panel" data-admin-panel="builder">
+          <div class="section-head compact"><div><span class="eyebrow">LEARNING BUILDER</span><h2>Courses, modules, lessons</h2></div></div>
+          <div class="card admin-form"><div class="admin-form-grid"><label>Course<select id="builder-course"></select></label><label>Module<select id="builder-module"></select></label></div>
+            <div class="admin-grid-2"><form id="module-form" class="admin-form"><h3>Module</h3><input type="hidden" name="id"/><label>Title<input name="title" required/></label><label>Order<input name="order" type="number" min="0" value="1"/></label><label class="checkbox-row"><input name="public" type="checkbox"/> Public module</label><button class="button" type="submit">Save module</button></form>
+            <form id="lesson-form" class="admin-form"><h3>Lesson</h3><input type="hidden" name="id"/><label>Title<input name="title" required/></label><label>Slug<input name="slug" required/></label><label>Order<input name="order" type="number" min="0" value="1"/></label><label class="checkbox-row"><input name="public" type="checkbox"/> Public lesson</label><button class="button" type="submit">Save lesson</button></form></div>
+            <div><h3>Lesson content blocks</h3><p class="meta">Build readable lessons without editing code. Add headings, text, examples, callouts, images, videos and lists.</p><div id="block-editor" class="admin-list"></div><button type="button" class="button button-secondary" id="add-block">Add content block</button> <button type="button" class="button" id="save-blocks">Save lesson content</button></div>
+          </div>
+        </section>
+
+        <section class="admin-panel" data-admin-panel="users">
+          <div class="section-head compact"><div><span class="eyebrow">ACCESS</span><h2>Users & roles</h2></div><button class="button button-secondary" data-refresh-users>Refresh</button></div>
+          <div id="users-admin-list" class="admin-table-wrap"></div>
+        </section>
+
+        <section class="admin-panel" data-admin-panel="orders">
+          <div class="section-head compact"><div><span class="eyebrow">COMMERCE</span><h2>Orders</h2></div><button class="button button-secondary" data-refresh-orders>Refresh</button></div>
+          <div id="orders-admin-list" class="admin-table-wrap"></div>
+        </section>
+
+        <section class="admin-panel" data-admin-panel="access">
+          <div class="section-head compact"><div><span class="eyebrow">ACCESS & SUPPORT</span><h2>Entitlements, enrollments, subscriptions and support</h2></div><button class="button button-secondary" data-refresh-access>Refresh</button></div>
+          <div class="admin-grid-2"><form id="enrollment-form" class="card admin-form"><h3>Enrollment</h3><label>User ID<input name="userId" required/></label><label>Course ID<input name="courseId" required/></label><label>Status<select name="status"><option>active</option><option>completed</option><option>paused</option><option>cancelled</option></select></label><button class="button" type="submit">Save enrollment</button></form>
+          <form id="entitlement-form" class="card admin-form"><h3>Product entitlement</h3><label>User ID<input name="userId" required/></label><label>Product ID<input name="productId" required/></label><label>Status<select name="status"><option>active</option><option>revoked</option></select></label><button class="button" type="submit">Save entitlement</button></form></div>
+          <div id="access-admin-list" class="admin-table-wrap"></div>
+        </section>
+
+        <section class="admin-panel" data-admin-panel="announcements">
+          <div class="section-head compact"><div><span class="eyebrow">COMMUNICATION</span><h2>Announcements</h2></div><button class="button" data-new-announcement>New announcement</button></div>
+          <form class="card admin-form" id="announcement-form" hidden><input type="hidden" name="id" /><div class="admin-form-grid"><label>Title<input name="title" required /></label><label>Type<input name="type" value="announcement" /></label><label>Start date<input name="startAt" type="datetime-local" /></label><label>End date<input name="endAt" type="datetime-local" /></label></div><label>Message<textarea name="message" rows="4"></textarea></label><label>Action URL<input name="actionUrl" type="url" /></label><label class="checkbox-row"><input name="public" type="checkbox" checked /> Visible publicly</label><div class="form-actions"><button class="button" type="submit">Save announcement</button><button class="button button-secondary" type="button" data-cancel-form="announcement-form">Cancel</button></div></form>
+          <div id="announcements-admin-list" class="admin-table-wrap"></div>
+        </section>
+
+        <section class="admin-panel" data-admin-panel="settings">
+          <div class="section-head compact"><div><span class="eyebrow">CONFIGURATION</span><h2>Site settings & feature flags</h2></div></div>
+          <form class="card admin-form" id="settings-form"><div class="admin-form-grid"><label>Site name<input name="siteName" value="Trade Avata" /></label><label>Tagline<input name="tagline" value="TRADE SIMPLE." /></label><label>Support email<input name="supportEmail" type="email" /></label><label>Maintenance mode<select name="maintenanceMode"><option value="false">Off</option><option value="true">On</option></select></label></div><label>Announcement banner text<textarea name="bannerText" rows="3"></textarea></label><div class="form-actions"><button class="button" type="submit">Save settings</button></div></form>
+          <div class="card admin-panel-card"><h3>Feature flags</h3><form id="flag-form" class="admin-form-inline"><input name="key" placeholder="feature.key" required /><select name="value"><option value="true">Enabled</option><option value="false">Disabled</option></select><button class="button" type="submit">Save flag</button></form><div id="flags-admin-list" class="admin-list"></div></div>
+        </section>
+
+        <section class="admin-panel" data-admin-panel="audit">
+          <div class="section-head compact"><div><span class="eyebrow">SECURITY</span><h2>Audit log</h2></div><button class="button button-secondary" data-refresh-audit>Refresh</button></div>
+          <div id="audit-admin-list" class="admin-table-wrap"></div>
+        </section>
+      </div>
+    </div>
+  </section>
+</BaseLayout>
+
+<script>
+  import { watchAuth } from '../../lib/firebase/auth.js';
+  import { getAdminRole, listAdminCollection, listAdminSubcollection, removeAdminDocument, removeAdminPathDocument, saveAdminDocument, saveAdminPathDocument, setRole, writeAdminAudit } from '../../lib/firebase/admin.js';
+  import { ensureUserProfile } from '../../lib/firebase/db.js';
+
+  const status = document.querySelector('#admin-status');
+  const panels = [...document.querySelectorAll('[data-admin-panel]')];
+  const navItems = [...document.querySelectorAll('[data-admin-nav] .admin-nav-item')];
+  let currentUser = null;
+  let currentRole = null;
+  let builderCourse = null;
+  let builderModule = null;
+  let builderLesson = null;
+  let builderBlocks = [];
+
+  const esc = value => String(value ?? '').replace(/[&<>'"]/g, char => ({'&':'&amp;','<':'&lt;','>':'&gt;',"'":'&#39;','"':'&quot;'}[char]));
+  const text = value => esc(value);
+  const fmtDate = value => value?.toDate ? value.toDate().toLocaleString() : (value ? new Date(value).toLocaleString() : '—');
+
+  function showPanel(name) {
+    panels.forEach(panel => panel.classList.toggle('is-active', panel.dataset.adminPanel === name));
+    navItems.forEach(item => item.classList.toggle('is-active', item.dataset.panel === name));
+    if (name === 'overview') loadOverview();
+    if (name === 'products') loadProducts();
+    if (name === 'courses') loadCourses();
+    if (name === 'content') loadArticles();
+    if (name === 'builder') loadBuilder();
+    if (name === 'users') loadUsers();
+    if (name === 'orders') loadOrders();
+    if (name === 'access') loadAccess();
+    if (name === 'announcements') loadAnnouncements();
+    if (name === 'settings') loadSettings();
+    if (name === 'audit') loadAudit();
+  }
+  navItems.forEach(item => item.addEventListener('click', () => showPanel(item.dataset.panel)));
+  document.querySelectorAll('[data-go-panel]').forEach(btn => btn.addEventListener('click', () => showPanel(btn.dataset.goPanel)));
+  document.querySelectorAll('[data-cancel-form]').forEach(btn => btn.addEventListener('click', () => { document.querySelector(`#${btn.dataset.cancelForm}`).hidden = true; }));
+
+  function rowTable(headers, rows) {
+    if (!rows.length) return '<div class="empty-state">No records yet.</div>';
+    return `<table class="admin-table"><thead><tr>${headers.map(h => `<th>${text(h)}</th>`).join('')}</tr></thead><tbody>${rows.join('')}</tbody></table>`;
+  }
+
+  async function loadOverview() {
+    const [users, products, courses, orders, announcements] = await Promise.all([listAdminCollection('users'), listAdminCollection('products'), listAdminCollection('courses'), listAdminCollection('orders'), listAdminCollection('announcements')]);
+    document.querySelector('#admin-stats').innerHTML = [['Users', users.length], ['Products', products.length], ['Courses', courses.length], ['Orders', orders.length], ['Announcements', announcements.length]].map(([label,value]) => `<div class="card admin-stat"><strong>${value}</strong><span>${label}</span></div>`).join('');
+    const recent = [...orders.map(x => ({label:'Order', value:x.id, at:x.createdAt})), ...announcements.map(x => ({label:'Announcement', value:x.title, at:x.createdAt}))].sort((a,b)=>(b.at?.seconds||0)-(a.at?.seconds||0)).slice(0,6);
+    document.querySelector('#admin-recent').innerHTML = recent.length ? recent.map(x => `<div class="admin-list-item"><strong>${text(x.label)}</strong><span>${text(x.value)} · ${fmtDate(x.at)}</span></div>`).join('') : '<div class="empty-state">No activity yet.</div>';
+  }
+
+  function fillForm(form, item = {}) { [...form.elements].forEach(el => { if (!el.name) return; if (el.type === 'checkbox') el.checked = Boolean(item[el.name]); else el.value = item[el.name] ?? ''; }); form.hidden = false; form.scrollIntoView({behavior:'smooth',block:'start'}); }
+  function formValues(form) { const out = {}; [...form.elements].forEach(el => { if (el.name) out[el.name] = el.type === 'checkbox' ? el.checked : el.value.trim(); }); return out; }
+
+  async function loadProducts() {
+    const data = await listAdminCollection('products');
+    document.querySelector('#products-admin-list').innerHTML = rowTable(['Product','Category','Availability','Visibility','Actions'], data.map(item => `<tr><td><strong>${text(item.name)}</strong><small>${text(item.slug)}</small></td><td>${text(item.category)}</td><td>${text(item.availability)}</td><td>${item.visible === false ? 'Hidden' : 'Public'}</td><td><button data-edit-product="${text(item.id)}">Edit</button> <button data-delete-product="${text(item.id)}">Delete</button></td></tr>`));
+    document.querySelectorAll('[data-edit-product]').forEach(btn => btn.addEventListener('click', async () => fillForm(document.querySelector('#product-form'), data.find(x => x.id === btn.dataset.editProduct))));
+    document.querySelectorAll('[data-delete-product]').forEach(btn => btn.addEventListener('click', async () => { if (confirm('Delete this product?')) { await removeAdminDocument('products', btn.dataset.deleteProduct); await loadProducts(); } }));
+  }
+  document.querySelector('[data-new-product]').addEventListener('click', () => fillForm(document.querySelector('#product-form')));
+  document.querySelector('#product-form').addEventListener('submit', async e => { e.preventDefault(); const form=e.currentTarget; const v=formValues(form); const id=v.id; delete v.id; v.visible = v.visible === true; v.featured = v.featured === true; await saveAdminDocument('products', id || null, v); await writeAdminAudit({actorId:currentUser.uid,action:id?'update':'create',target:'product',targetId:id||v.slug}); form.hidden=true; await loadProducts(); });
+
+  async function loadCourses() {
+    const data = await listAdminCollection('courses');
+    document.querySelector('#courses-admin-list').innerHTML = rowTable(['Course','Level','Access','Lessons','Actions'], data.map(item => `<tr><td><strong>${text(item.title)}</strong><small>${text(item.slug)}</small></td><td>${text(item.level)}</td><td>${text(item.access)}</td><td>${text(item.lessonCount)}</td><td><button data-edit-course="${text(item.id)}">Edit</button> <button data-delete-course="${text(item.id)}">Delete</button></td></tr>`));
+    document.querySelectorAll('[data-edit-course]').forEach(btn => btn.addEventListener('click', () => fillForm(document.querySelector('#course-form'), data.find(x => x.id === btn.dataset.editCourse))));
+    document.querySelectorAll('[data-delete-course]').forEach(btn => btn.addEventListener('click', async () => { if (confirm('Delete this course?')) { await removeAdminDocument('courses', btn.dataset.deleteCourse); await loadCourses(); } }));
+  }
+  document.querySelector('[data-new-course]').addEventListener('click', () => fillForm(document.querySelector('#course-form')));
+  document.querySelector('#course-form').addEventListener('submit', async e => { e.preventDefault(); const form=e.currentTarget; const v=formValues(form); const id=v.id; delete v.id; v.public=v.public===true; v.lessonCount=Number(v.lessonCount||0); await saveAdminDocument('courses', id||null, v); await writeAdminAudit({actorId:currentUser.uid,action:id?'update':'create',target:'course',targetId:id||v.slug}); form.hidden=true; await loadCourses(); });
+
+  async function loadArticles() {
+    const data = await listAdminCollection('articles');
+    document.querySelector('#articles-admin-list').innerHTML = rowTable(['Article','Category','Published','Updated','Actions'], data.map(item => `<tr><td><strong>${text(item.title)}</strong><small>${text(item.slug)}</small></td><td>${text(item.category)}</td><td>${item.public === false ? 'Draft' : 'Published'}</td><td>${fmtDate(item.updatedAt)}</td><td><button data-edit-article="${text(item.id)}">Edit</button> <button data-delete-article="${text(item.id)}">Delete</button></td></tr>`));
+    document.querySelectorAll('[data-edit-article]').forEach(btn => btn.addEventListener('click', () => fillForm(document.querySelector('#article-form'), data.find(x => x.id === btn.dataset.editArticle))));
+    document.querySelectorAll('[data-delete-article]').forEach(btn => btn.addEventListener('click', async () => { if (confirm('Delete this article?')) { await removeAdminDocument('articles', btn.dataset.deleteArticle); await loadArticles(); } }));
+  }
+  document.querySelector('[data-new-article]').addEventListener('click', () => fillForm(document.querySelector('#article-form')));
+  document.querySelector('#article-form').addEventListener('submit', async e => { e.preventDefault(); const form=e.currentTarget; const v=formValues(form); const id=v.id; delete v.id; v.public=v.public===true; await saveAdminDocument('articles', id||null, v); await writeAdminAudit({actorId:currentUser.uid,action:id?'update':'create',target:'article',targetId:id||v.slug}); form.hidden=true; await loadArticles(); });
+
+  async function loadBuilder() {
+    const courses = await listAdminCollection('courses');
+    const select = document.querySelector('#builder-course');
+    select.innerHTML = courses.map(x => `<option value="${text(x.id)}">${text(x.title || x.id)}</option>`).join('');
+    if (builderCourse && courses.some(x => x.id === builderCourse)) select.value = builderCourse;
+    builderCourse = select.value || null;
+    await loadBuilderModules();
+  }
+  async function loadBuilderModules() {
+    if (!builderCourse) return;
+    const modules = await listAdminSubcollection(`courses/${builderCourse}/modules`);
+    const select = document.querySelector('#builder-module');
+    select.innerHTML = modules.sort((a,b)=>(a.order||0)-(b.order||0)).map(x => `<option value="${text(x.id)}">${text(x.title || x.id)}</option>`).join('');
+    builderModule = select.value || null;
+    await loadBuilderLessons();
+  }
+  async function loadBuilderLessons() {
+    if (!builderCourse || !builderModule) { builderLesson=null; renderBlocks([]); return; }
+    const lessons = await listAdminSubcollection(`courses/${builderCourse}/modules/${builderModule}/lessons`);
+    builderLesson = builderLesson && lessons.some(x=>x.id===builderLesson) ? builderLesson : (lessons[0]?.id || null);
+    if (builderLesson) { document.querySelector('#lesson-form').dataset.id=builderLesson; const lesson=lessons.find(x=>x.id===builderLesson); fillForm(document.querySelector('#lesson-form'),lesson); await loadBuilderContent(); }
+    else { document.querySelector('#lesson-form').reset(); renderBlocks([]); }
+  }
+  async function loadBuilderContent() {
+    if (!builderCourse || !builderModule || !builderLesson) return;
+    const data = await listAdminSubcollection(`courses/${builderCourse}/modules/${builderModule}/lessons/${builderLesson}/content`);
+    const body = data.find(x=>x.id==='body'); builderBlocks = Array.isArray(body?.blocks) ? body.blocks : []; renderBlocks(builderBlocks);
+  }
+  function renderBlocks(blocks) {
+    const root=document.querySelector('#block-editor'); root.innerHTML='';
+    blocks.forEach((block,index)=>{
+      const row=document.createElement('div'); row.className='card admin-form'; row.dataset.index=String(index);
+      row.innerHTML=`<div class="admin-form-grid"><label>Type<select data-block-field="type"><option>heading</option><option>paragraph</option><option>example</option><option>callout</option><option>list</option><option>image</option><option>video</option><option>quote</option><option>divider</option></select></label><label>Title<input data-block-field="title"></label></div><label>Text / items<textarea data-block-field="text" rows="4"></textarea></label><div class="admin-form-grid"><label>URL (image/video)<input data-block-field="url" type="url"></label><label>Caption<input data-block-field="caption"></label></div><div class="form-actions"><button type="button" class="button button-secondary" data-up>↑</button><button type="button" class="button button-secondary" data-down>↓</button><button type="button" class="button button-secondary" data-remove>Remove</button></div>`;
+      row.querySelector('[data-block-field="type"]').value=block.type||'paragraph'; row.querySelector('[data-block-field="title"]').value=block.title||''; row.querySelector('[data-block-field="text"]').value=Array.isArray(block.items)?block.items.join('\n'):(block.text||''); row.querySelector('[data-block-field="url"]').value=block.url||''; row.querySelector('[data-block-field="caption"]').value=block.caption||'';
+      row.querySelector('[data-up]').addEventListener('click',()=>{if(index>0){[builderBlocks[index-1],builderBlocks[index]]=[builderBlocks[index],builderBlocks[index-1]];renderBlocks(builderBlocks);}}); row.querySelector('[data-down]').addEventListener('click',()=>{if(index<builderBlocks.length-1){[builderBlocks[index+1],builderBlocks[index]]=[builderBlocks[index],builderBlocks[index+1]];renderBlocks(builderBlocks);}}); row.querySelector('[data-remove]').addEventListener('click',()=>{builderBlocks.splice(index,1);renderBlocks(builderBlocks);}); root.appendChild(row);
+    });
+  }
+  function readBlocks(){
+    return [...document.querySelectorAll('#block-editor>[data-index]')].map(row=>{ const get=n=>row.querySelector(`[data-block-field="${n}"]`)?.value.trim()||''; const type=get('type'); const textValue=get('text'); const b={type,title:get('title'),url:get('url'),caption:get('caption')}; if(type==='list') b.items=textValue.split(/\n+/).map(x=>x.trim()).filter(Boolean); else if(type!=='divider') b.text=textValue; if(type==='divider') delete b.text; return Object.fromEntries(Object.entries(b).filter(([,v])=>v!=='')); });
+  }
+  document.querySelector('#builder-course').addEventListener('change',async e=>{builderCourse=e.target.value;builderModule=null;builderLesson=null;await loadBuilderModules();});
+  document.querySelector('#builder-module').addEventListener('change',async e=>{builderModule=e.target.value;builderLesson=null;await loadBuilderLessons();});
+  document.querySelector('#add-block').addEventListener('click',()=>{builderBlocks=readBlocks();builderBlocks.push({type:'paragraph',text:''});renderBlocks(builderBlocks);});
+  document.querySelector('#save-blocks').addEventListener('click',async()=>{if(!builderCourse||!builderModule||!builderLesson){status.textContent='Select a course, module and lesson first.';return;} builderBlocks=readBlocks(); await saveAdminPathDocument(`courses/${builderCourse}/modules/${builderModule}/lessons/${builderLesson}/content`,'body',{blocks:builderBlocks}); await writeAdminAudit({actorId:currentUser.uid,action:'update',target:'lessonContent',targetId:builderLesson}); status.textContent='Lesson content saved.';});
+  document.querySelector('#module-form').addEventListener('submit',async e=>{e.preventDefault();if(!builderCourse)return;const v=formValues(e.currentTarget);const id=v.id;delete v.id;v.order=Number(v.order||0);v.public=v.public===true;const saved=await saveAdminPathDocument(`courses/${builderCourse}/modules`,id||null,{...v,courseId:builderCourse});builderModule=saved;await loadBuilderModules();await writeAdminAudit({actorId:currentUser.uid,action:id?'update':'create',target:'module',targetId:saved});});
+  document.querySelector('#lesson-form').addEventListener('submit',async e=>{e.preventDefault();if(!builderCourse||!builderModule)return;const v=formValues(e.currentTarget);const id=v.id||e.currentTarget.dataset.id;delete v.id;v.order=Number(v.order||0);v.public=v.public===true;const saved=await saveAdminPathDocument(`courses/${builderCourse}/modules/${builderModule}/lessons`,id||null,{...v,moduleId:builderModule,courseId:builderCourse});builderLesson=saved;await loadBuilderLessons();await writeAdminAudit({actorId:currentUser.uid,action:id?'update':'create',target:'lesson',targetId:saved});});
+
+  async function loadAccess(){
+    const [enrollments,entitlements,subscriptions,tickets,certificates]=await Promise.all(['enrollments','entitlements','subscriptions','supportTickets','certificates'].map(listAdminCollection));
+    document.querySelector('#access-admin-list').innerHTML = `<div class="admin-grid-2"><div class="card admin-panel-card"><h3>Enrollments</h3>${rowTable(['User','Course','Status','Created'],enrollments.map(x=>`<tr><td>${text(x.userId)}</td><td>${text(x.courseId)}</td><td>${text(x.status)}</td><td>${fmtDate(x.createdAt)}</td></tr>`))}</div><div class="card admin-panel-card"><h3>Entitlements</h3>${rowTable(['User','Product','Status','Created'],entitlements.map(x=>`<tr><td>${text(x.userId)}</td><td>${text(x.productId)}</td><td>${text(x.status)}</td><td>${fmtDate(x.createdAt)}</td></tr>`))}</div><div class="card admin-panel-card"><h3>Subscriptions</h3>${rowTable(['User','Plan','Status','Created'],subscriptions.map(x=>`<tr><td>${text(x.userId)}</td><td>${text(x.planId||x.plan||'—')}</td><td>${text(x.status)}</td><td>${fmtDate(x.createdAt)}</td></tr>`))}</div><div class="card admin-panel-card"><h3>Support tickets</h3>${rowTable(['User','Subject','Status','Created'],tickets.map(x=>`<tr><td>${text(x.userId)}</td><td>${text(x.subject||x.title||'—')}</td><td>${text(x.status||'open')}</td><td>${fmtDate(x.createdAt)}</td></tr>`))}</div><div class="card admin-panel-card"><h3>Certificates</h3>${rowTable(['User','Course','Issued'],certificates.map(x=>`<tr><td>${text(x.userId)}</td><td>${text(x.courseId)}</td><td>${fmtDate(x.issuedAt||x.createdAt)}</td></tr>`))}</div></div>`;
+  }
+  document.querySelector('[data-refresh-access]').addEventListener('click',loadAccess);
+  document.querySelector('#enrollment-form').addEventListener('submit',async e=>{e.preventDefault();const v=formValues(e.currentTarget);const id=`${v.userId}_${v.courseId}`;await saveAdminDocument('enrollments',id,v);await writeAdminAudit({actorId:currentUser.uid,action:'upsert',target:'enrollment',targetId:id});await loadAccess();});
+  document.querySelector('#entitlement-form').addEventListener('submit',async e=>{e.preventDefault();const v=formValues(e.currentTarget);const id=`${v.userId}_${v.productId}`;await saveAdminDocument('entitlements',id,v);await writeAdminAudit({actorId:currentUser.uid,action:'upsert',target:'entitlement',targetId:id});await loadAccess();});
+
+  async function loadUsers() {
+    const data = await listAdminCollection('users');
+    const roles = await listAdminCollection('roles');
+    const roleMap = Object.fromEntries(roles.map(x => [x.id, x]));
+    document.querySelector('#users-admin-list').innerHTML = rowTable(['User','Role','Last login','Actions'], data.map(item => `<tr><td><strong>${text(item.displayName || 'Unnamed')}</strong><small>${text(item.email)}</small></td><td><select data-role-user="${text(item.id)}"><option value="user" ${roleMap[item.id]?.role==='user'?'selected':''}>User</option><option value="staff" ${roleMap[item.id]?.role==='staff'?'selected':''}>Staff</option><option value="admin" ${roleMap[item.id]?.role==='admin'?'selected':''}>Admin</option></select></td><td>${fmtDate(item.lastLoginAt)}</td><td><button data-save-role="${text(item.id)}">Save role</button></td></tr>`));
+    document.querySelectorAll('[data-save-role]').forEach(btn => btn.addEventListener('click', async () => { if(currentRole !== 'admin'){ status.textContent='Only an admin can change roles.'; return; } const select=document.querySelector(`[data-role-user="${btn.dataset.saveRole}"]`); await setRole(btn.dataset.saveRole, select.value); await writeAdminAudit({actorId:currentUser.uid,action:'update',target:'role',targetId:btn.dataset.saveRole,metadata:{role:select.value}}); btn.textContent='Saved'; setTimeout(()=>btn.textContent='Save role',900); }));
+  }
+  document.querySelector('[data-refresh-users]').addEventListener('click', loadUsers);
+
+  async function loadOrders() {
+    const data = await listAdminCollection('orders');
+    document.querySelector('#orders-admin-list').innerHTML = rowTable(['Order','User','Amount','Status','Created'], data.map(item => `<tr><td><strong>${text(item.id)}</strong></td><td>${text(item.userId)}</td><td>${text(item.amount || item.total || '—')}</td><td>${text(item.status || '—')}</td><td>${fmtDate(item.createdAt)}</td></tr>`));
+  }
+  document.querySelector('[data-refresh-orders]').addEventListener('click', loadOrders);
+
+  async function loadAnnouncements() {
+    const data=await listAdminCollection('announcements');
+    document.querySelector('#announcements-admin-list').innerHTML=rowTable(['Announcement','Visibility','Schedule','Actions'],data.map(item=>`<tr><td><strong>${text(item.title)}</strong><small>${text(item.message)}</small></td><td>${item.public===false?'Hidden':'Public'}</td><td>${fmtDate(item.startAt)} → ${fmtDate(item.endAt)}</td><td><button data-edit-announcement="${text(item.id)}">Edit</button> <button data-delete-announcement="${text(item.id)}">Delete</button></td></tr>`));
+    document.querySelectorAll('[data-edit-announcement]').forEach(btn=>btn.addEventListener('click',()=>fillForm(document.querySelector('#announcement-form'),data.find(x=>x.id===btn.dataset.editAnnouncement))));
+    document.querySelectorAll('[data-delete-announcement]').forEach(btn=>btn.addEventListener('click',async()=>{if(confirm('Delete this announcement?')){await removeAdminDocument('announcements',btn.dataset.deleteAnnouncement);await loadAnnouncements();}}));
+  }
+  document.querySelector('[data-new-announcement]').addEventListener('click',()=>fillForm(document.querySelector('#announcement-form')));
+  document.querySelector('#announcement-form').addEventListener('submit',async e=>{e.preventDefault();const form=e.currentTarget;const v=formValues(form);const id=v.id;delete v.id;v.public=v.public===true;await saveAdminDocument('announcements',id||null,v);await writeAdminAudit({actorId:currentUser.uid,action:id?'update':'create',target:'announcement',targetId:id||v.title});form.hidden=true;await loadAnnouncements();});
+
+  async function loadSettings(){const data=await listAdminCollection('siteSettings');const settings=data.find(x=>x.id==='global')||{};const form=document.querySelector('#settings-form');fillForm(form,settings);form.hidden=false;const flags=await listAdminCollection('featureFlags');document.querySelector('#flags-admin-list').innerHTML=flags.length?flags.map(x=>`<div class="admin-list-item"><strong>${text(x.id)}</strong><span>${x.value?'Enabled':'Disabled'}</span></div>`).join(''):'<div class="empty-state">No feature flags.</div>';}
+  document.querySelector('#settings-form').addEventListener('submit',async e=>{e.preventDefault();const v=formValues(e.currentTarget);v.maintenanceMode=v.maintenanceMode==='true';await saveAdminDocument('siteSettings','global',v);status.textContent='Site settings saved.';});
+  document.querySelector('#flag-form').addEventListener('submit',async e=>{e.preventDefault();const v=formValues(e.currentTarget);await saveAdminDocument('featureFlags',v.key,{value:v.value==='true',public:false}); await writeAdminAudit({actorId:currentUser.uid,action:'update',target:'featureFlag',targetId:v.key});e.currentTarget.reset();await loadSettings();});
+
+  async function loadAudit(){const data=await listAdminCollection('auditLogs');document.querySelector('#audit-admin-list').innerHTML=rowTable(['Action','Actor','Target','Time'],data.map(item=>`<tr><td>${text(item.action)}</td><td>${text(item.actorId)}</td><td>${text(item.target || item.targetId)}</td><td>${fmtDate(item.createdAt)}</td></tr>`));}
+  document.querySelector('[data-refresh-audit]').addEventListener('click',loadAudit);
+  document.querySelector('[data-refresh]').addEventListener('click',()=>showPanel('overview'));
+
+  watchAuth(async user => {
+    currentUser=user;
+    if(!user){ status.innerHTML='Please <a href="'+(document.body.dataset.baseUrl||'/')+'login/">sign in</a> to access the admin area.'; return; }
+    try { await ensureUserProfile(user); const role=await getAdminRole(user.uid); if(!role){ status.textContent='This account does not have administrator or staff access.'; document.querySelector('.admin-shell').classList.add('is-denied'); return; } currentRole=role.role; status.textContent=`Signed in as ${user.email || user.uid} · ${role.role}`; showPanel('overview'); }
+    catch(error){ status.textContent=error?.message||'Unable to verify administrator access.'; document.querySelector('.admin-shell').classList.add('is-denied'); }
+  });
+</script>
