@@ -1,0 +1,157 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+
+const base = import.meta.env.BASE_URL;
+---
+
+<BaseLayout title="My Trading | Trade Avata">
+  <main class="ta-app">
+    <aside class="sidebar">
+      <div class="brand"><span class="brand-mark">TA</span><span>Trade Avata</span></div>
+      <div class="side-label">MY TRADING</div>
+      <nav>
+        {[
+          ['dashboard','Dashboard','⌂'],
+          ['accounts','Accounts','◉'],
+          ['performance','Performance','↗'],
+          ['trades','Trades','▤'],
+          ['calendar','Calendar','□'],
+          ['strategies','Strategies','◆'],
+          ['risk','Risk','△'],
+          ['bookkeeping','Bookkeeping','₦'],
+          ['insights','Insights','✦'],
+          ['reports','Reports','▥'],
+          ['downloads','Downloads','⇩']
+        ].map(([id,label,icon]) => (
+          <button class="nav-item" data-view={id}><span>{icon}</span>{label}</button>
+        ))}
+      </nav>
+      <div class="side-foot">
+        <a href={base}>← Back to Trade Avata</a>
+      </div>
+    </aside>
+
+    <section class="workspace">
+      <header class="topbar">
+        <div class="mobile-brand"><span class="brand-mark">TA</span> Trade Avata</div>
+        <div class="account-select">
+          <span class="dot"></span>
+          <span>My Trading Account</span>
+          <small>Demo • USD</small>
+        </div>
+        <div class="top-actions">
+          <button class="ghost" id="syncBtn">↻ Sync</button>
+          <button class="primary" id="connectBtn">+ Connect Account</button>
+        </div>
+      </header>
+
+      <div class="mobile-scroll-nav">
+        {['dashboard','performance','trades','calendar','strategies','risk','bookkeeping','insights','reports','downloads'].map(x => <button data-view={x}>{x[0].toUpperCase()+x.slice(1)}</button>)}
+      </div>
+
+      <div class="content">
+        <section class="view active" data-panel="dashboard">
+          <div class="heading"><div><p class="eyebrow">OVERVIEW</p><h1>Trading Dashboard</h1><p>Everything important about this account in one place.</p></div><div class="date-pill">Last 90 days ▾</div></div>
+          <div class="kpi-row">
+            <article class="kpi"><span>Equity</span><strong>$12,846.20</strong><em class="up">+4.82%</em></article>
+            <article class="kpi"><span>Net P&amp;L</span><strong>+$2,846.20</strong><em class="up">+28.46%</em></article>
+            <article class="kpi"><span>Win Rate</span><strong>64.2%</strong><em>321 trades</em></article>
+            <article class="kpi"><span>Profit Factor</span><strong>1.84</strong><em>Gross P/L ratio</em></article>
+            <article class="kpi"><span>Max Drawdown</span><strong>-8.7%</strong><em class="down">$1,184.30</em></article>
+          </div>
+          <div class="grid-2">
+            <article class="card chart-card"><div class="card-head"><div><h2>Equity Curve</h2><p>Account growth over time</p></div><button class="download" data-export="performance">⇩ Download</button></div><div class="chart-tabs"><span class="selected">3M</span><span>6M</span><span>1Y</span><span>All</span></div><svg viewBox="0 0 700 240" preserveAspectRatio="none" class="equity"><defs><linearGradient id="fill" x1="0" x2="0" y1="0" y2="1"><stop offset="0" stop-opacity=".24"/><stop offset="1" stop-opacity="0"/></linearGradient></defs><path d="M0 205 C45 195,55 165,95 180 S155 145,190 155 S245 105,285 130 S335 80,375 100 S425 70,470 92 S520 45,560 62 S620 25,700 40 L700 240 L0 240 Z" fill="url(#fill)"/><path d="M0 205 C45 195,55 165,95 180 S155 145,190 155 S245 105,285 130 S335 80,375 100 S425 70,470 92 S520 45,560 62 S620 25,700 40" fill="none" stroke="currentColor" stroke-width="3"/></svg></article>
+            <article class="card"><div class="card-head"><div><h2>Quick Stats</h2><p>What your account is doing</p></div><button class="download" data-export="dashboard">⇩ PDF</button></div><div class="stats"><div><span>Total Trades</span><b>321</b></div><div><span>Avg. Win</span><b>+$126.40</b></div><div><span>Avg. Loss</span><b>-$74.10</b></div><div><span>Expectancy</span><b>+$24.80</b></div><div><span>Best Day</span><b>+$482.20</b></div><div><span>Worst Day</span><b>-$318.50</b></div></div></article>
+          </div>
+          <div class="grid-2">
+            <article class="card"><div class="card-head"><div><h2>Trading Calendar</h2><p>Daily P&amp;L at a glance</p></div><button class="text-btn" data-view="calendar">View calendar →</button></div><div class="mini-calendar"><div class="cal-days">{Array.from({length:35},(_,i)=><span class={(i%7===2||i%7===4)?'loss':(i%5===0?'blank':'win')}>{i+1}</span>)}</div></div></article>
+            <article class="card"><div class="card-head"><div><h2>Strategy Performance</h2><p>How your approaches compare</p></div><button class="text-btn" data-view="strategies">View strategies →</button></div><div class="strategy-list"><div><b>Breakout</b><span>72% win · PF 2.14</span><strong>+$1,240</strong></div><div><b>Pullback</b><span>65% win · PF 1.86</span><strong>+$894</strong></div><div><b>Trend</b><span>58% win · PF 1.51</span><strong>+$512</strong></div></div></article>
+          </div>
+          <article class="card"><div class="card-head"><div><h2>Recent Trades</h2><p>Your latest closed trades</p></div><button class="text-btn" data-view="trades">View all →</button></div><div class="table-wrap"><table><thead><tr><th>Symbol</th><th>Side</th><th>Entry</th><th>Exit</th><th>P&amp;L</th><th>Strategy</th></tr></thead><tbody>
+            <tr><td>EURUSD</td><td>BUY</td><td>1.1682</td><td>1.1724</td><td class="up">+$84.20</td><td>Breakout</td></tr>
+            <tr><td>XAUUSD</td><td>SELL</td><td>3,742.1</td><td>3,718.8</td><td class="up">+$214.40</td><td>Pullback</td></tr>
+            <tr><td>NAS100</td><td>BUY</td><td>24,104</td><td>24,018</td><td class="down">-$86.00</td><td>Trend</td></tr>
+          </tbody></table></div></article>
+        </section>
+
+        <section class="view" data-panel="accounts"><div class="heading"><div><p class="eyebrow">ACCOUNTS</p><h1>Your Trading Accounts</h1><p>Manage connected accounts and their sync status.</p></div><button class="primary" id="connect2">+ Connect Account</button></div><div class="account-cards"><article class="account-card"><div class="status">● Connected</div><h2>My Trading Account</h2><p>Demo account · USD</p><strong>$12,846.20</strong><div><span>Net P&amp;L +$2,846.20</span><span>Last sync: Today</span></div></article><article class="account-card muted"><div class="status">○ Not connected</div><h2>Live Account</h2><p>Connect another account</p><button class="primary" id="connect3">Connect</button></article></div></section>
+
+        <section class="view" data-panel="performance"><div class="heading"><div><p class="eyebrow">ANALYTICS</p><h1>Performance</h1><p>Detailed financial performance of the selected account.</p></div><div class="export-group"><button class="ghost" data-export="performance">⇩ PDF</button><button class="primary" data-export="performance-xlsx">⇩ Spreadsheet</button></div></div><div class="kpi-row"><article class="kpi"><span>Net P&amp;L</span><strong>+$2,846.20</strong></article><article class="kpi"><span>Return</span><strong>28.46%</strong></article><article class="kpi"><span>Expectancy</span><strong>+$24.80</strong></article><article class="kpi"><span>Avg. R</span><strong>+0.42R</strong></article></div><article class="card large-chart"><h2>Equity &amp; Balance</h2><svg viewBox="0 0 900 300" preserveAspectRatio="none" class="equity big"><path d="M0 260 C100 250,120 205,190 225 S280 160,350 180 S450 120,520 145 S610 85,690 105 S790 55,900 70" fill="none" stroke="currentColor" stroke-width="4"/></svg></article><div class="grid-3"><article class="metric"><span>Winning trades</span><b>206</b></article><article class="metric"><span>Losing trades</span><b>115</b></article><article class="metric"><span>Average trade</span><b>+$24.80</b></article></div></section>
+
+        <section class="view" data-panel="trades"><div class="heading"><div><p class="eyebrow">TRADE BOOK</p><h1>All Trades</h1><p>Search, filter and review every recorded trade.</p></div><div class="export-group"><button class="ghost" data-export="trades">⇩ PDF</button><button class="primary" data-export="trades-xlsx">⇩ Spreadsheet</button></div></div><div class="filters"><input placeholder="Search symbol, strategy..." /><select><option>All sides</option><option>BUY</option><option>SELL</option></select><select><option>All results</option><option>Winners</option><option>Losers</option></select><button class="ghost">Filters</button></div><article class="card"><div class="table-wrap"><table><thead><tr><th>Date</th><th>Symbol</th><th>Side</th><th>Volume</th><th>Entry</th><th>Exit</th><th>P&amp;L</th><th>Strategy</th></tr></thead><tbody>{Array.from({length:12},(_,i)=><tr><td>Sep {28-i}, 2026</td><td>{['EURUSD','XAUUSD','NAS100','GBPUSD'][i%4]}</td><td>{i%3?'BUY':'SELL'}</td><td>0.{(i%5)+1}</td><td>1.16{i}</td><td>1.17{i}</td><td class={i%4===2?'down':'up'}>{i%4===2?'-$86.00':'+$84.20'}</td><td>{['Breakout','Pullback','Trend'][i%3]}</td></tr>)}</tbody></table></div></article></section>
+
+        <section class="view" data-panel="calendar"><div class="heading"><div><p class="eyebrow">TIME ANALYSIS</p><h1>Trading Calendar</h1><p>See exactly when your account made and lost money.</p></div><div class="export-group"><button class="ghost" data-export="calendar">⇩ PDF</button><button class="primary" data-export="calendar-xlsx">⇩ Spreadsheet</button></div></div><article class="card calendar-card"><div class="calendar-title"><button>‹</button><h2>September 2026</h2><button>›</button></div><div class="week">{['Mon','Tue','Wed','Thu','Fri','Sat','Sun'].map(d=><b>{d}</b>)}{Array.from({length:35},(_,i)=><div class={i%7===2?'loss':i%7===6?'blank':'win'}><span>{i+1}</span><b>{i%7===6?'—':(i%4===0?'+$182':'+$64')}</b></div>)}</div></article></section>
+
+        <section class="view" data-panel="strategies"><div class="heading"><div><p class="eyebrow">STRATEGY ANALYTICS</p><h1>Strategies</h1><p>Compare the approaches recorded in your trading data.</p></div><div class="export-group"><button class="ghost" data-export="strategies">⇩ PDF</button><button class="primary" data-export="strategies-xlsx">⇩ Spreadsheet</button></div></div><div class="strategy-grid">{[['Breakout','72%','2.14','+$1,240','84'],['Pullback','65%','1.86','+$894','96'],['Trend','58%','1.51','+$512','73']].map(x=><article class="strategy-card"><span>STRATEGY</span><h2>{x[0]}</h2><div><b>{x[1]}</b><small>Win rate</small></div><div><b>{x[2]}</b><small>Profit factor</small></div><div><b>{x[3]}</b><small>Net P&amp;L</small></div><footer>{x[4]} trades</footer></article>)}</div></section>
+
+        <section class="view" data-panel="risk"><div class="heading"><div><p class="eyebrow">RISK ANALYTICS</p><h1>Risk</h1><p>Understand drawdown, streaks, exposure and risk consistency.</p></div><div class="export-group"><button class="ghost" data-export="risk">⇩ PDF</button><button class="primary" data-export="risk-xlsx">⇩ Spreadsheet</button></div></div><div class="grid-3"><article class="metric"><span>Max drawdown</span><b>-8.7%</b><small>$1,184.30</small></article><article class="metric"><span>Longest losing streak</span><b>6 trades</b><small>Historical maximum</small></article><article class="metric"><span>Avg risk / trade</span><b>0.82R</b><small>Based on recorded trades</small></article></div><article class="card"><h2>Risk Consistency</h2><div class="bars">{['Position size','Risk per trade','Exposure','Loss concentration'].map((x,i)=><div class="bar"><span>{x}</span><i><b style={`width:${[76,68,54,43][i]}%`}></b></i><strong>{[76,68,54,43][i]}%</strong></div>)}</div></article></section>
+
+        <section class="view" data-panel="bookkeeping"><div class="heading"><div><p class="eyebrow">FINANCIAL RECORDS</p><h1>Bookkeeping</h1><p>Keep deposits, withdrawals, fees and trading results together.</p></div><div class="export-group"><button class="ghost" data-export="bookkeeping">⇩ PDF</button><button class="primary" data-export="bookkeeping-xlsx">⇩ Spreadsheet</button></div></div><div class="grid-3"><article class="metric"><span>Deposits</span><b>$10,000</b></article><article class="metric"><span>Withdrawals</span><b>$0</b></article><article class="metric"><span>Fees &amp; charges</span><b>-$248.40</b></article></div><article class="card"><div class="table-wrap"><table><thead><tr><th>Date</th><th>Type</th><th>Description</th><th>Amount</th></tr></thead><tbody><tr><td>Jul 01</td><td>Deposit</td><td>Initial funding</td><td>+$10,000</td></tr><tr><td>Sep 28</td><td>Trading fees</td><td>Commissions + swaps</td><td class="down">-$248.40</td></tr><tr><td>Sep 28</td><td>Trading P&amp;L</td><td>Closed trades</td><td class="up">+$3,094.60</td></tr></tbody></table></div></article></section>
+
+        <section class="view" data-panel="insights"><div class="heading"><div><p class="eyebrow">TRADE AVATA INSIGHTS</p><h1>Your Data Shows…</h1><p>Historical observations generated from the account data.</p></div><div class="export-group"><button class="ghost" data-export="insights">⇩ PDF</button><button class="primary" data-export="insights-xlsx">⇩ Spreadsheet</button></div></div><div class="insight-grid">{[['Your strongest session','London session produced the highest average P&L in this sample.'],['Your strongest setup','Breakout trades have the highest profit factor among recorded strategy tags.'],['Your difficult period','The largest drawdown occurred during a six-trade losing streak.'],['Your trade management','Winning trades generally held longer than losing trades in this sample.']].map(x=><article class="insight"><span>✦</span><h2>{x[0]}</h2><p>{x[1]}</p><small>Based on historical account data.</small></article>)}</div></section>
+
+        <section class="view" data-panel="reports"><div class="heading"><div><p class="eyebrow">REPORTING</p><h1>Reports</h1><p>Create a reviewable snapshot of your trading period.</p></div><button class="primary" id="reportBtn">Generate Report</button></div><div class="report-grid">{[['Monthly Trading Report','Performance, risk, trades, strategies and insights.'],['Performance Report','Equity, P&L, returns and drawdown.'],['Risk Report','Drawdown, streaks, exposure and risk consistency.'],['Bookkeeping Report','Deposits, withdrawals, fees and financial records.']].map(x=><article class="report-card"><span>REPORT</span><h2>{x[0]}</h2><p>{x[1]}</p><div><button class="ghost" data-export="report">⇩ PDF</button><button class="text-btn">Open →</button></div></article>)}</div></section>
+
+        <section class="view" data-panel="downloads"><div class="heading"><div><p class="eyebrow">DOWNLOAD CENTER</p><h1>Take Your Data With You</h1><p>Download any part of your analysis or the complete account report.</p></div><button class="primary" data-export="complete">⇩ Download Complete Report</button></div><article class="download-hero"><div><span>COMPLETE ACCOUNT</span><h2>Your complete trading record</h2><p>Performance + trades + calendar + strategies + risk + bookkeeping + insights.</p></div><div class="export-group"><button class="ghost" data-export="complete">⇩ PDF</button><button class="primary" data-export="complete-xlsx">⇩ Spreadsheet</button></div></article><div class="download-grid">{[['Performance','Equity, P&L, returns and drawdown.','performance'],['Trades','Full trade history and execution records.','trades'],['Calendar','Daily and monthly activity/P&L.','calendar'],['Strategies','Strategy/tag performance comparison.','strategies'],['Risk','Risk and drawdown analysis.','risk'],['Bookkeeping','Deposits, withdrawals, fees and ledger.','bookkeeping'],['Insights','Trade Avata observations from your data.','insights'],['Reports','Generated review reports.','report']].map(x=><article class="download-card"><h2>{x[0]}</h2><p>{x[1]}</p><div><button class="ghost" data-export={x[2]}>⇩ PDF</button><button class="text-btn" data-export={x[2]+'-xlsx'}>Spreadsheet →</button></div></article>)}</div></section>
+      </div>
+
+      <nav class="bottom-nav">{[['dashboard','Home'],['performance','Analytics'],['trades','Trades'],['downloads','More']].map(([id,l])=><button data-view={id}>{l}</button>)}</nav>
+    </section>
+  </main>
+
+  <style>
+    :global(*){box-sizing:border-box}:global(body){margin:0;background:#f4f7fb;color:#0f172a;font-family:Inter,ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif}.ta-app{min-height:100vh;display:flex}.sidebar{width:245px;position:fixed;inset:0 auto 0 0;background:#0b1220;color:#cbd5e1;padding:22px 14px;display:flex;flex-direction:column;z-index:5}.brand{font-weight:800;color:#fff;font-size:17px;display:flex;gap:10px;align-items:center;padding:0 10px 26px}.brand-mark{display:grid;place-items:center;width:34px;height:34px;border-radius:9px;background:#fff;color:#0b1220;font-size:12px;font-weight:900}.side-label,.eyebrow{font-size:10px;font-weight:800;letter-spacing:.13em;color:#64748b}.side-label{padding:0 11px 9px;color:#64748b}.nav-item{width:100%;border:0;background:transparent;color:#94a3b8;padding:11px 12px;border-radius:9px;text-align:left;display:flex;gap:11px;align-items:center;font-size:13px;cursor:pointer}.nav-item:hover,.nav-item.active{background:#182235;color:#fff}.side-foot{margin-top:auto;padding:12px}.side-foot a{color:#94a3b8;text-decoration:none;font-size:12px}.workspace{margin-left:245px;width:calc(100% - 245px)}.topbar{height:72px;background:#fff;border-bottom:1px solid #e2e8f0;display:flex;align-items:center;justify-content:space-between;padding:0 28px;position:sticky;top:0;z-index:4}.account-select{display:flex;gap:9px;align-items:center;font-size:13px;font-weight:700}.account-select small{font-weight:500;color:#64748b}.dot{width:8px;height:8px;background:#22c55e;border-radius:50%}.top-actions,.export-group{display:flex;gap:8px}.ghost,.primary,.download,.text-btn{border-radius:8px;padding:9px 13px;font-size:12px;font-weight:700;cursor:pointer}.ghost{background:#fff;border:1px solid #dbe3ec;color:#334155}.primary{background:#0f172a;border:1px solid #0f172a;color:#fff}.download,.text-btn{background:transparent;border:0;color:#334155}.mobile-brand,.mobile-scroll-nav,.bottom-nav{display:none}.content{max-width:1450px;margin:auto;padding:28px}.heading{display:flex;justify-content:space-between;gap:18px;align-items:flex-start;margin-bottom:22px}.heading h1{margin:4px 0 5px;font-size:28px}.heading p{margin:0;color:#64748b;font-size:13px}.date-pill{background:#fff;border:1px solid #dbe3ec;border-radius:9px;padding:10px 13px;font-size:12px}.kpi-row{display:flex;gap:12px;overflow-x:auto;margin-bottom:18px;padding-bottom:2px}.kpi{background:#fff;border:1px solid #e3e9f1;border-radius:12px;padding:17px;min-width:185px;flex:1}.kpi span,.metric span{display:block;font-size:11px;color:#64748b}.kpi strong{display:block;font-size:23px;margin:7px 0}.kpi em{font-style:normal;font-size:11px;color:#64748b}.up{color:#16803c!important}.down{color:#c2413d!important}.grid-2{display:grid;grid-template-columns:1.4fr 1fr;gap:16px;margin-bottom:16px}.grid-3{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-bottom:16px}.card,.metric,.account-card,.strategy-card,.insight,.report-card,.download-card,.download-hero{background:#fff;border:1px solid #e3e9f1;border-radius:12px;padding:18px}.card{margin-bottom:16px}.card-head{display:flex;justify-content:space-between;gap:10px;align-items:flex-start}.card h2,.metric h2{font-size:15px;margin:0 0 4px}.card-head p{font-size:11px;color:#64748b;margin:0}.chart-tabs{display:flex;gap:5px;margin:16px 0 4px}.chart-tabs span{padding:5px 8px;border-radius:6px;font-size:10px;color:#64748b}.chart-tabs .selected{background:#e2e8f0;color:#0f172a;font-weight:700}.equity{width:100%;height:235px;color:#2563eb}.equity.big{height:300px;margin-top:15px}.stats{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:16px}.stats div{background:#f8fafc;border-radius:8px;padding:12px}.stats span,.stats b{display:block}.stats span{font-size:10px;color:#64748b}.stats b{font-size:14px;margin-top:4px}.mini-calendar{overflow:hidden}.cal-days{display:grid;grid-template-columns:repeat(7,1fr);gap:5px;margin-top:14px}.cal-days span{aspect-ratio:1;border-radius:5px;display:grid;place-items:center;font-size:9px;background:#dcfce7;color:#166534}.cal-days .loss{background:#fee2e2;color:#991b1b}.cal-days .blank{background:#f1f5f9;color:#94a3b8}.strategy-list>div{display:grid;grid-template-columns:1fr 1.2fr auto;gap:10px;padding:12px 0;border-bottom:1px solid #edf1f5;font-size:11px;align-items:center}.strategy-list span{color:#64748b}.strategy-list strong{color:#16803c}.table-wrap{overflow-x:auto}table{width:100%;border-collapse:collapse;min-width:700px}th,td{text-align:left;padding:12px 10px;border-bottom:1px solid #edf1f5;font-size:11px;white-space:nowrap}th{font-size:10px;color:#64748b}.view{display:none}.view.active{display:block}.account-cards,.strategy-grid,.insight-grid,.report-grid,.download-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:15px}.account-card h2,.strategy-card h2,.insight h2,.report-card h2,.download-card h2{font-size:16px;margin:12px 0 5px}.account-card>strong{font-size:28px;display:block;margin:18px 0}.account-card>div:last-child{display:flex;justify-content:space-between;color:#64748b;font-size:11px}.status{font-size:10px;color:#16803c;font-weight:800}.account-card.muted .status{color:#64748b}.filters{display:flex;gap:8px;margin-bottom:14px;overflow-x:auto}.filters input,.filters select{border:1px solid #dbe3ec;background:#fff;border-radius:8px;padding:10px;font-size:12px;min-width:150px}.calendar-card{max-width:900px}.calendar-title{display:flex;justify-content:center;gap:20px;align-items:center}.calendar-title button{border:1px solid #dbe3ec;background:#fff;border-radius:7px}.week{display:grid;grid-template-columns:repeat(7,1fr);gap:7px;margin-top:18px}.week>b{text-align:center;font-size:10px;color:#64748b}.week>div{min-height:75px;border-radius:8px;padding:9px;background:#dcfce7;color:#166534}.week .loss{background:#fee2e2;color:#991b1b}.week .blank{background:#f8fafc;color:#94a3b8}.week span,.week b{display:block}.week div b{margin-top:16px;font-size:11px}.strategy-grid{grid-template-columns:repeat(3,1fr)}.strategy-card span,.report-card>span,.download-hero span{font-size:9px;font-weight:800;letter-spacing:.12em;color:#64748b}.strategy-card>div{display:inline-flex;flex-direction:column;margin:18px 14px 8px 0}.strategy-card>div b{font-size:19px}.strategy-card small{font-size:9px;color:#64748b}.strategy-card footer{border-top:1px solid #edf1f5;padding-top:10px;color:#64748b;font-size:10px}.metric b{display:block;font-size:24px;margin:8px 0}.metric small{color:#64748b;font-size:10px}.bars{margin-top:15px}.bar{display:grid;grid-template-columns:130px 1fr 40px;gap:10px;align-items:center;margin:14px 0;font-size:11px}.bar i{height:8px;background:#e2e8f0;border-radius:10px;overflow:hidden}.bar b{display:block;height:100%;background:#334155;border-radius:10px}.bar strong{font-size:10px}.insight-grid{grid-template-columns:repeat(2,1fr)}.insight>span{font-size:20px}.insight p{color:#475569;line-height:1.6;font-size:12px}.insight small{font-size:9px;color:#94a3b8}.report-grid{grid-template-columns:repeat(2,1fr)}.report-card p,.download-card p{font-size:12px;color:#64748b;line-height:1.5}.report-card>div,.download-card>div{display:flex;gap:5px;align-items:center}.download-hero{display:flex;justify-content:space-between;align-items:center;margin-bottom:15px;background:#0f172a;color:#fff;border-color:#0f172a}.download-hero p{color:#cbd5e1;font-size:12px}.download-hero span{color:#94a3b8}.download-hero .ghost{background:transparent;color:#fff;border-color:#475569}.download-grid{grid-template-columns:repeat(3,1fr)}.mobile-scroll-nav{display:none}
+    @media(max-width:900px){.sidebar{display:none}.workspace{margin:0;width:100%}.topbar{height:60px;padding:0 14px}.mobile-brand{display:flex;align-items:center;gap:7px;font-weight:800;font-size:13px}.mobile-brand .brand-mark{width:28px;height:28px}.account-select{display:none}.top-actions .ghost{display:none}.top-actions .primary{padding:8px 10px}.content{padding:18px 14px 82px}.mobile-scroll-nav{display:flex;gap:8px;overflow-x:auto;padding:10px 14px;background:#fff;border-bottom:1px solid #e2e8f0}.mobile-scroll-nav button{white-space:nowrap;border:1px solid #dbe3ec;background:#fff;border-radius:20px;padding:7px 11px;font-size:10px}.heading{display:block}.heading h1{font-size:24px}.heading .export-group,.heading>button{margin-top:13px}.grid-2,.grid-3,.account-cards,.strategy-grid,.insight-grid,.report-grid,.download-grid{grid-template-columns:1fr}.kpi{min-width:170px}.card{padding:15px}.download-hero{display:block}.download-hero .export-group{margin-top:14px}.bottom-nav{display:flex;position:fixed;left:0;right:0;bottom:0;height:62px;background:#fff;border-top:1px solid #e2e8f0;z-index:9;justify-content:space-around}.bottom-nav button{border:0;background:transparent;font-size:10px;color:#64748b}.week>div{min-height:58px}.bar{grid-template-columns:90px 1fr 35px}}
+  </style>
+
+  <script>
+    const base = import.meta.env.BASE_URL;
+    const buttons = [...document.querySelectorAll('[data-view]')];
+    const panels = [...document.querySelectorAll('[data-panel]')];
+
+    function show(id){
+      panels.forEach(p=>p.classList.toggle('active',p.dataset.panel===id));
+      buttons.forEach(b=>b.classList.toggle('active',b.dataset.view===id));
+      history.replaceState(null,'','#'+id);
+      window.scrollTo({top:0,behavior:'smooth'});
+    }
+    buttons.forEach(b=>b.addEventListener('click',()=>show(b.dataset.view)));
+    show(location.hash.replace('#','') || 'dashboard');
+
+    function csvDownload(name, rows){
+      const csv = rows.map(r=>r.map(v=>`"${String(v).replaceAll('"','""')}"`).join(',')).join('\\n');
+      const blob = new Blob([csv],{type:'text/csv;charset=utf-8'});
+      const a=document.createElement('a'); a.href=URL.createObjectURL(blob); a.download=name+'.csv'; a.click();
+      setTimeout(()=>URL.revokeObjectURL(a.href),1000);
+    }
+    function pdfPrint(title){
+      const w=window.open('','_blank','width=900,height=800');
+      if(!w){alert('Please allow pop-ups to generate the PDF.');return;}
+      w.document.write(`<html><head><title>${title} — Trade Avata</title><style>
+      body{font-family:Arial,sans-serif;padding:36px;color:#0f172a}h1{font-size:25px}h2{font-size:16px;margin-top:26px}
+      .meta{color:#64748b;font-size:12px;margin-bottom:25px}.box{border:1px solid #ddd;border-radius:8px;padding:15px;margin:10px 0}
+      table{width:100%;border-collapse:collapse}td,th{padding:9px;border-bottom:1px solid #ddd;text-align:left;font-size:11px}
+      </style></head><body><h1>Trade Avata — ${title}</h1><div class="meta">Generated from My Trading · ${new Date().toLocaleString()}</div>
+      <div class="box"><b>Account</b><br>My Trading Account · USD<br><br><b>Equity:</b> $12,846.20 &nbsp; <b>Net P&amp;L:</b> +$2,846.20 &nbsp; <b>Win Rate:</b> 64.2%</div>
+      <h2>Report</h2><p>This PDF is a downloadable report generated from the selected Trade Avata analysis view. Production account data will populate these values from the connected account.</p>
+      <h2>Key metrics</h2><table><tr><th>Metric</th><th>Value</th></tr><tr><td>Trades</td><td>321</td></tr><tr><td>Profit Factor</td><td>1.84</td></tr><tr><td>Max Drawdown</td><td>-8.7%</td></tr><tr><td>Expectancy</td><td>+$24.80</td></tr></table>
+      <script>window.onload=()=>setTimeout(()=>window.print(),300)<\/script></body></html>`);
+      w.document.close();
+    }
+    document.querySelectorAll('[data-export]').forEach(b=>{
+      b.addEventListener('click',()=>{
+        const type=b.dataset.export;
+        if(type.endsWith('-xlsx') || type==='complete-xlsx'){
+          csvDownload('trade-avata-'+type.replace('-xlsx',''),[
+            ['Trade Avata','My Trading Export'],['Generated',new Date().toISOString()],['Equity','$12,846.20'],['Net P&L','$2,846.20'],['Win Rate','64.2%'],['Profit Factor','1.84'],['Max Drawdown','-8.7%']
+          ]);
+        } else {
+          pdfPrint(type==='complete'?'Complete Trading Report':type.charAt(0).toUpperCase()+type.slice(1)+' Report');
+        }
+      });
+    });
+    ['connectBtn','connect2','connect3'].forEach(id=>document.getElementById(id)?.addEventListener('click',()=>alert('Account connection is ready for the real provider/CSV connector layer.')));
+    document.getElementById('syncBtn')?.addEventListener('click',()=>alert('Sync will use the connected account provider once the live connector is configured.'));
+    document.getElementById('reportBtn')?.addEventListener('click',()=>pdfPrint('Monthly Trading Report'));
+  </script>
+</BaseLayout>
