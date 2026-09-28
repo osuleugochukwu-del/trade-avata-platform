@@ -360,18 +360,18 @@ const json = (value) => JSON.stringify(value);
     <footer class="dialog-actions"><button class="primary-btn" data-close-dialog>Close</button></footer>
   </dialog>
 
-  <script>
+  <script define:vars={{ base, demoAccount, accounts, trades, monthly, symbols, strategies, sessions, weekday, equity }}>
     window.__TRADE_AVATA_ANALYTICS__ = {
-      base: {json(base)},
-      account: {json(demoAccount)},
-      accounts: {json(accounts)},
-      trades: {json(trades)},
-      monthly: {json(monthly)},
-      symbols: {json(symbols)},
-      strategies: {json(strategies)},
-      sessions: {json(sessions)},
-      weekday: {json(weekday)},
-      equity: {json(equity)}
+      base,
+      account: demoAccount,
+      accounts,
+      trades,
+      monthly,
+      symbols,
+      strategies,
+      sessions,
+      weekday,
+      equity
     };
   </script>
   <script type="module">
